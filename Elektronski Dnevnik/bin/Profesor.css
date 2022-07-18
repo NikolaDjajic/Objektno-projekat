@@ -1,0 +1,70 @@
+#menuB{
+    -fx-background-color: #393838;
+    -fx-text-fill: white;
+    -fx-border-color: white;
+    -fx-font-weight: bold;
+}
+#menuB:hover{
+        -fx-background-color:
+                linear-gradient(#393838, #393838),
+                linear-gradient(#393838, #393838),
+                linear-gradient(#393838, #393838),
+                linear-gradient(#393838 0%, #393838 50%, #393838 100%),
+                linear-gradient(from 0% 0% to 15% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0));
+            -fx-text-fill: white;
+            -fx-font-weight: bold;           
+}
+.root{
+	-fx-background-color: linear-gradient(#393838, #838383);
+}
+#obButton{
+	-fx-background-color:
+            #c3c4c4,
+            linear-gradient(#d6d6d6 50%, white 100%),
+            radial-gradient(center 50% -40%, radius 200%, #e6e6e6 45%, rgba(230,230,230,0) 50%);
+    -fx-background-radius: 30;
+    -fx-background-insets: 0,1,1;
+    -fx-text-fill: black;
+    -fx-font: 18px Ariel;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
+	-fx-min-width:85; 
+	-fx-min-height:33;
+}
+#nazadButton{
+	-fx-background-color:
+            #c3c4c4,
+            linear-gradient(#d6d6d6 50%, white 100%),
+            radial-gradient(center 50% -40%, radius 200%, #e6e6e6 45%, rgba(230,230,230,0) 50%);
+    -fx-background-insets: 0,1,1;
+    -fx-text-fill: black;
+    -fx-font: 18px Ariel;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
+	-fx-min-width:60; 
+	-fx-min-height:25;
+}
+.label{
+	-fx-font: 15px Ariel;
+}
+#gLabel{
+	-fx-font: 17px Ariel;
+    -fx-font-weight: bold;	
+}
+
+#wLabel{
+	-fx-font: 18px Ariel;
+	-fx-text-fill: white;
+}
+.choicebox > .label{
+	-fx-text-fill: black;
+}
+.choice-box .menu-item > .label{
+	-fx-text-fill: black;
+}
+.radiobutton{
+	-fx-text-fill: white;
+}
+#naslov{
+	-fx-font: 32px Ariel;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+}

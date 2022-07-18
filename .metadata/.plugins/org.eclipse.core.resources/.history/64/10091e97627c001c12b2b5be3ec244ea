@@ -1,0 +1,44 @@
+package application;
+
+public class Ispit implements Comparable<Ispit> {
+
+	private Predmet predmet;
+	private Student student;
+	private String datum;
+	private int ocjena;
+	
+	private Ispit(String st,String pr,String datum,int ocjena) {
+		this.datum=datum;
+		this.ocjena=ocjena;
+		
+		
+		
+		
+	}
+
+	@Override
+	public int compareTo(Ispit i) {
+		String niz[]=this.datum.split("-");
+		String prvis=niz[2]+""+niz[1]+""+niz[0];
+		String drugis=niz[2]+""+niz[1]+""+niz[0];
+		int prvi=Integer.parseInt(prvis);
+		int drugi=Integer.parseInt(drugis);
+		return prvi-drugi;
+	}
+
+	public Predmet getPredmet() {
+		return predmet;
+	}
+
+	public Student getStudent() {
+		return student;
+	}
+
+	public String getDatum() {
+		return datum;
+	}
+
+	public int getOcjena() {
+		return ocjena;
+	}
+}

@@ -1,0 +1,31 @@
+import java.util.ArrayList;
+
+public class Restoran {
+	private String naziv, grad;
+	private static ArrayList<Restoran> lista_Resotrana = new ArrayList<Restoran>();
+
+	public Restoran(String naziv, String grad) {
+		boolean uslov = true;
+		for (Restoran r : lista_Resotrana) {
+			if (r.naziv.equals(this.naziv) && (r.grad.equals(this.grad))) {
+				uslov = false;
+				break;
+			}
+		}
+		if (uslov == true)
+			lista_Resotrana.add(this);
+		else
+			System.err.println("Vec postoji uneseni restoran!");
+	}
+
+	public static Restoran get_RestoranNaziv(String naziv) {
+		Restoran pronadjen = null;
+		for (Restoran r : lista_Resotrana) {
+			if (r.naziv.equals(naziv)) {
+				pronadjen = r;
+				break;
+			}
+		}
+		return pronadjen;
+	}
+}

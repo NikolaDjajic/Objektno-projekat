@@ -1,0 +1,128 @@
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class Obrok {
+	private Gost gost;
+	private Hrana hrana;
+	private String datum;
+	private Restoran restoran;
+	private static ArrayList<Obrok> lista_Obroka = new ArrayList<Obrok>();
+	
+	public Obrok(String ime, String prezime, String naziv_hrane, String naziv_restorana, String datum) {
+		this.gost=Gost.get_GostIme(ime, prezime);
+		this.hrana=Hrana.getHranaPoImenu(naziv_hrane);
+		this.restoran=Restoran.get_RestoranNaziv(naziv_restorana);
+		this.datum=datum;
+		
+		if(this.gost==null) {
+			Gost g=new Gost(ime,prezime);
+			this.gost=g;
+		}
+		
+		lista_Obroka.add(this);
+	}
+	
+	public static void ucitajObroke() {
+		Path put=Paths.get("Obrok.txt");
+		
+		try {
+			List<String>linije=Files.readAllLines(put);
+			
+			for(String l:linije) {
+				String niz[]=l.split(",");
+				String niz1[]=niz[0].split(" ");
+				String hrana=niz[1].substring(1);
+				String restoran=niz[2].substring(1);
+				String datum=niz[3].substring(1);
+				
+				new Obrok(niz1[0],niz1[1],hrana,restoran,datum);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	public Map<String,Double> djeBio(Gost g,Restoran r){
+		
+		Map<String,Double> mapa=new HashMap<String, Double>();
+		
+		
+		for(Obrok o:lista_Obroka) {
+			if(o.getGost().equals(g) && o.getRestoran().equals(r)) {
+				boolean b=true;
+				for(Map.Entry<String,Double> n:mapa.entrySet()) 
+					if(n.getKey().equals(o.getDatum())) {
+						n.setValue(n.getValue()+o.getHrana().getCijena());	
+						b=false;
+						break;
+					}
+				if(b==true)
+					mapa.put(o.getDatum(), o.getHrana().getCijena());
+			}
+			
+		}
+		return mapa;
+	}
+
+	public Hrana najPopHrana(Restoran r) {
+		
+		ArrayList<Hrana> listaHrane=new ArrayList<Hrana>();
+		ArrayList<Integer> listaBrojanja=new ArrayList<Integer>();
+		
+		for(Obrok o:lista_Obroka) {
+			if(o.getRestoran().equals(r)) {
+				if(listaHrane.contains(o.getHrana())) {
+					int i=listaHrane.indexOf(o.getHrana());
+					listaBrojanja.set(i,listaBrojanja.get(i)+1);
+				}
+				else{
+					listaHrane.add(o.getHrana());
+					listaBrojanja.add(1);
+				}
+			}
+		}
+		int index=0;
+		int max=0;
+		for(int i=0;i<listaBrojanja.size();i++) {
+			if(listaBrojanja.get(i)>max) {
+				max=listaBrojanja.get(i);
+				index=i;
+			}
+		}
+		
+		return listaHrane.get(index);
+			
+		
+		
+	
+			
+			
+		
+		
+	}
+	
+	public Gost getGost() {
+		return gost;
+	}
+
+	public Hrana getHrana() {
+		return hrana;
+	}
+
+	public String getDatum() {
+		return datum;
+	}
+
+	public Restoran getRestoran() {
+		return restoran;
+	}
+
+	public static ArrayList<Obrok> getLista_Obroka() {
+		return lista_Obroka;
+	}
+}

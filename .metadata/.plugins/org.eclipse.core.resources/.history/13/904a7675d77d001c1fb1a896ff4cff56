@@ -1,0 +1,81 @@
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Hrana {
+	private String naziv;
+	private Restoran restoran;
+	private double cijena;
+	private static ArrayList<Hrana> lista_Hrane = new ArrayList<Hrana>();
+
+	public Hrana(String naziv, String ime_Restorana, double cijena) {
+		this.naziv=naziv;
+		this.restoran=Restoran.get_RestoranNaziv(ime_Restorana);
+		this.cijena=cijena;
+		
+		boolean uslov = true;
+		for (Hrana h : lista_Hrane) {
+			if (h.naziv.equals(this.naziv) && (h.restoran.equals(this.restoran))){
+				uslov = false;
+				break;
+			}
+		}
+		if (uslov == true)
+			lista_Hrane.add(this);
+		else
+			System.err.println("Vec postoji unos!");
+	}
+	
+	public static void ucitajHranu() {
+	Path put=Paths.get("Hrana.txt");
+	
+	try {
+		List<String> linije=Files.readAllLines(put);
+		
+		for(String l:linije) {
+			
+			String niz[]=l.split(",");
+			String ime=niz[0];
+			String imerest=niz[1].substring(1);
+			String cijena=niz[2].substring(1);
+			double cijenad=Double.parseDouble(cijena);
+			
+			new Hrana(ime,imerest,cijenad);
+			
+		}
+	} catch (Exception e) {
+		System.err.println("Penis");
+	}		
+}
+	
+	public static Hrana getHranaPoImenu(String naziv) {
+		
+		for(Hrana h:lista_Hrane)
+			if(h.getNaziv().equals(naziv))
+				return h;
+		return null;
+		
+		
+	}
+
+	public String getNaziv() {
+		return naziv;
+	}
+
+	public Restoran getRestoran() {
+		return restoran;
+	}
+
+	public double getCijena() {
+		return cijena;
+	}
+
+	public static ArrayList<Hrana> getLista_Hrane() {
+		return lista_Hrane;
+	}
+	
+	
+	
+}

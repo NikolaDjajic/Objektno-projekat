@@ -1,0 +1,21 @@
+package application;
+
+import java.util.function.Function;
+
+public class cs {
+
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		
+		int x=4,x1=5,y=51,y1=9;
+		
+		int i= x==x1?
+				Integer.compare(y, y1):
+				Integer.compare(x, x1);
+		System.out.println(i);
+		
+	}
+
+}

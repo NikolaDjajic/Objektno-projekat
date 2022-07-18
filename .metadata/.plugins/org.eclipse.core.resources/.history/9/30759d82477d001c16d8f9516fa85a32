@@ -1,0 +1,153 @@
+package application;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
+public class Student implements Comparable<Student>{
+	
+	private String ime,prezime,pol,grad,index;
+	private static Map<String,Student> sviStudenti = new HashMap<>();
+	private int brojPolozenih,brECTS;
+	private double prosjek;
+		
+	private Student(String index,String ime,String prezime,String pol,String grad) {
+		this.index=index;
+		this.ime=ime;
+		this.prezime=prezime;
+		this.pol=pol;
+		this.grad=grad;
+		
+		sviStudenti.put(index, this);
+	}
+	
+	public void izracunaj() {
+		ArrayList<Ispit> s=Ispit.getSviIspiti();
+		int brIspita=0,ects=0,prBr=0;
+		double pr=0;
+		for(Ispit i:s) {
+			System.out.println("K");
+			if(i.getStudent().getIndex().equals(this.getIndex())) {
+				System.out.println(i.getStudent().getIndex());
+				brIspita++;
+				ects+=i.getPredmet().getEcts();
+				pr+=i.getOcjena();
+				prBr++;
+				System.out.println(brIspita+" "+ects+" "+pr+" "+prBr);
+			}
+			System.out.println(brIspita+" "+ects+" "+pr+" "+prBr);
+		}
+	
+		setBrojPolozenih(brIspita);
+		setBrECTS(ects);
+		setProsjek(pr/prBr);
+	}
+	
+	public static void ucitajStudente() {
+		Path put=Paths.get("Student.txt");
+		try {
+			Student novi;
+			List<String>linije=Files.readAllLines(put);
+			for(int i=0;i<linije.size();i++) {
+				String st=linije.get(i);
+				String niz[]=st.split(":");
+				String index=niz[0];
+				niz=niz[1].split(",");
+				String ime=niz[0];
+				ime=ime.substring(2);
+				String prezime=niz[1];
+				String pol=niz[2];
+				niz=niz[3].split("]");
+				
+				novi=new Student(index,ime,prezime,pol,niz[0]);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void ispisiStudente() {
+		System.out.println(sviStudenti);
+	}
+	
+	@Override
+	public int compareTo(Object o) {
+	
+		return 0;
+	}
+	
+	public static Student getStudentByIndex(String index) {
+		for(Map.Entry<String,Student> s:sviStudenti.entrySet())
+			if (s.getKey().equals(index))
+				return s.getValue();
+		return null;
+	}
+
+	@Override
+	public String toString() {
+		String r="";
+		r+="Index: "+index;
+		r+="Ime: "+ime;
+		r+="Prezime: "+prezime;
+		r+="Pol: "+pol;
+		r+="Grad: "+grad;
+		return r;
+	}
+
+	public String getIme() {
+		return ime;
+	}
+
+	public String getPrezime() {
+		return prezime;
+	}
+
+	public String getPol() {
+		return pol;
+	}
+
+	public String getGrad() {
+		return grad;
+	}
+
+	public String getIndex() {
+		return index;
+	}
+
+	public static Map<String, Student> getSviStudenti() {
+		return sviStudenti;
+	}
+
+	public void setBrojPolozenih(int brojPolozenih) {
+		this.brojPolozenih = brojPolozenih;
+	}
+
+	public void setBrECTS(int brECTS) {
+		this.brECTS = brECTS;
+	}
+
+	public void setProsjek(double prosjek) {
+		this.prosjek = prosjek;
+	}
+
+	public int getBrojPolozenih() {
+		return brojPolozenih;
+	}
+
+	public int getBrECTS() {
+		return brECTS;
+	}
+
+	public double getProsjek() {
+		return prosjek;
+	}
+
+	
+}

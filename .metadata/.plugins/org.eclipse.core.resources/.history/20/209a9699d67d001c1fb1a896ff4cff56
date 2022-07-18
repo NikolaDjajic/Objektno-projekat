@@ -1,0 +1,30 @@
+import java.util.ArrayList;
+
+public class Gost {
+	private String ime, prezime;
+	private static ArrayList<Gost> lista_Gostiju = new ArrayList<Gost>();
+
+	public Gost(String ime, String prezime) {
+		boolean uslov = true;
+		for (Gost g : lista_Gostiju) {
+			if (g.ime.equals(this.ime) && g.prezime.equals(this.prezime))
+				uslov = false;
+			break;
+		}
+		if (uslov == true)
+			lista_Gostiju.add(this);
+		else
+			System.err.println("Vec postoji unos!");
+	}
+	
+	public Gost get_GostIme(String ime, String prezime) {
+		Gost pronadjen = null;
+		for (Gost g : lista_Gostiju) {
+			if (g.ime.equals(this.ime) && g.prezime.equals(this.prezime)) {
+				pronadjen = g;
+				break;
+			}
+		}
+		return pronadjen;
+	}
+}

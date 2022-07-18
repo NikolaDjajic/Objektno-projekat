@@ -1,0 +1,1993 @@
+package aplikacija;
+
+
+import java.math.BigDecimal;
+//import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+
+import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+//import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.MapValueFactory;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
+
+public class GUI extends Application{
+
+	private static final String FXCollections = null;
+	public static void main(String[]args) {
+		launch(args);
+	}
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		// TODO Auto-generated method stub
+		MySQL sql = new MySQL();
+		
+//----------------PRIJAVA--------------------------------------------
+		
+		VBox vboxPrijava = new VBox(10);
+		Label sara=new Label("Sarina prodavnica");
+		sara.setTextFill(Color.rgb(230, 116, 81));
+		sara.setFont(Font.font("Comic Sans MS", 20));
+		sara.setBackground(new Background(new BackgroundFill(Color.rgb(248,238, 236),CornerRadii.EMPTY, Insets.EMPTY)));
+		vboxPrijava.setPadding(new Insets(15,50,50,50));
+		vboxPrijava.setAlignment(Pos.BASELINE_CENTER);
+		vboxPrijava.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203), CornerRadii.EMPTY, Insets.EMPTY)));
+		
+		Label lbkorisnickoIme=new Label("Unesite Vase korisnicko ime ili Vas email:");
+		TextField tfKorisnickoIme = new TextField();
+		Label lbLozinka=new Label("Unesite Vasu sifru:");
+		PasswordField lozinka=new PasswordField();
+		
+		Label koste=new Label("Prijavljujete se kao:");
+		RadioButton k = new RadioButton("Kupac");
+		RadioButton t = new RadioButton("Trgovac");
+		HBox check=new HBox(20);
+		check.getChildren().addAll(koste,k,t);
+		
+		Label prijava=new Label("Kliknite za prijavu:");
+		Button pr=new Button("Prijavite se");
+		
+		Label registracija=new Label("Ukoliko nemate nalog, registrujte se:(kao kupac)");
+		Button reg=new Button("Registrujte se");
+		
+		Label greska1=new Label();
+		greska1.setTextFill(Color.RED);
+		
+		Scene scene = new Scene(vboxPrijava, 370, 400);
+		primaryStage.setScene(scene);
+	    
+	    vboxPrijava.getChildren().addAll(greska1,lbkorisnickoIme,tfKorisnickoIme,lbLozinka,lozinka,check,prijava,pr,registracija,reg);
+		
+//-------------------REGISTRACIJA---------------------------------
+	    
+	    VBox vboxRegistracija=new VBox(10);
+	    Label objasnjenje=new Label("*-obavezna polja");
+	    objasnjenje.setStyle("-fx-font-weight: bold");
+	    vboxRegistracija.setPadding(new Insets(15,50,50,50));
+	    //vboxRegistracija.setAlignment(Pos.BASELINE_CENTER);
+		vboxRegistracija.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203), CornerRadii.EMPTY, Insets.EMPTY)));
+	    
+	  
+		Scene scener = new Scene(vboxRegistracija, 500, 520);
+		
+		Label greskica=new Label();
+		
+	    Label ime=new Label("*Unesite ime:");
+	    TextField tfime=new TextField();
+	    VBox vbime=new VBox(10);
+	    vbime.getChildren().addAll(ime,tfime);
+	    VBox vbprezime=new VBox(10);
+	    tfime.setMinWidth(100);
+	    Label prezime=new Label("*Unesite prezime:");
+	    TextField tfprezime=new TextField();
+	    tfprezime.setMinWidth(100);
+	    vbprezime.getChildren().addAll(prezime,tfprezime);
+	    HBox imeprezime=new HBox(20);
+	    imeprezime.getChildren().addAll(vbime,vbprezime);
+	    
+	    Label drzava=new Label("*Unesite drzavu:");
+	    TextField tfdrzava=new TextField();
+	    VBox vbdrzava=new VBox(10);
+	    vbdrzava.getChildren().addAll(drzava,tfdrzava);
+	    tfdrzava.setMinWidth(100);
+	    Label grad=new Label("*Unesite grad:");
+	    TextField tfgrad=new TextField();
+	    VBox vbgrad=new VBox(10);
+	    vbgrad.getChildren().addAll(grad,tfgrad);
+	    tfgrad.setMinWidth(100);
+	    HBox drzavagrad=new HBox(20);
+	    drzavagrad.getChildren().addAll(vbdrzava,vbgrad);
+	    
+	    Label adresa=new Label("Unesite adresu");
+	    TextField tfadresa=new TextField();
+	    VBox vbadresa=new VBox(10);
+	    vbadresa.getChildren().addAll(adresa,tfadresa);
+	    tfadresa.setMinWidth(100);
+	    Label postanskibr=new Label("*Unesite postanski broj:");
+	    TextField tfpobr=new TextField();
+	    VBox vbpobr=new VBox(10);
+	    vbpobr.getChildren().addAll(postanskibr,tfpobr);
+	    tfpobr.setMinWidth(100);
+	    HBox adresapobr=new HBox(20);
+	    adresapobr.getChildren().addAll(vbadresa,vbpobr);
+	    
+	    Label telefon=new Label("Unesite telefon:");
+	    TextField tftelefon=new TextField();
+	    VBox vbtelefon=new VBox(10);
+	    vbtelefon.getChildren().addAll(telefon,tftelefon);
+	    tftelefon.setMinWidth(100);
+	    Label email=new Label("*Unesite email:");
+	    TextField tfemail=new TextField();
+	    VBox vbemail=new VBox(10);
+	    vbemail.getChildren().addAll(email,tfemail);
+	    tfemail.setMinWidth(100);
+	    HBox telemail=new HBox(20);
+	    telemail.getChildren().addAll(vbtelefon,vbemail);
+	    
+	    Label pol=new Label("*Pol:");
+	    RadioButton zen=new RadioButton("Zenski");
+	    RadioButton mus=new RadioButton("Muski");
+	    HBox hpol=new HBox(20);
+	    hpol.getChildren().addAll(pol,zen,mus);
+	    
+	    VBox korime=new VBox(30);
+	    VBox lozi=new VBox(30);
+	    Label korisnickoime=new Label("*Korisnicko ime:");
+	    TextField tfkorime=new TextField();
+	    tfkorime.setMinWidth(50);
+	    Label lozinkar=new Label("*Sifra:");
+	    PasswordField plozinka=new PasswordField();
+	    plozinka.setMinWidth(50);
+	    korime.getChildren().addAll(korisnickoime,tfkorime);
+	    lozi.getChildren().addAll(lozinkar,plozinka);
+	    HBox regg=new HBox(10);
+	    regg.getChildren().addAll(korime,lozi);
+	    
+	    Button registruj=new Button("Registruj se");
+	    Button nazadreg=new Button("Nazad");
+	   
+	    
+	    
+	    
+	    
+	    vboxRegistracija.getChildren().addAll(greskica,objasnjenje,imeprezime,drzavagrad,adresapobr,telemail,hpol,regg,registruj,nazadreg);
+	    
+	    primaryStage.setScene(scene);
+	    primaryStage.show();
+	    
+//---------ako je izabrana prijava-------------------------
+	    
+	    pr.setOnAction(e->{
+	    	
+	    	if(tfKorisnickoIme.getText().isEmpty() || lozinka.getText().isEmpty()) {
+	    		greska1.setText("Greska! Neko polje je prazno.");
+	    		return;
+	    	}
+	    	
+	    	if(!k.isSelected() && !t.isSelected()) {
+	    		greska1.setText("Greska! Niste oznacili kako se prijavljujete.");
+	    		return;
+	    	}
+	    	
+	    	//-------------------------- KUPAC -----------------------------
+	    	if(k.isSelected()) {
+	    		
+	    		greska1.setText(" ");
+	    		
+	    		if(!Kupac.postojiKorisnicko(tfKorisnickoIme.getText())) {
+	    			greska1.setManaged(true);
+	    			greska1.setText("Neispravno korisnicko ime.");
+	    			//System.out.println(tfKorisnickoIme.getText());
+	    			return;
+	    			
+	    		}
+	    		
+	    		if(!Kupac.ispravnaLozinka(tfKorisnickoIme.getText(), lozinka.getText())) {
+	    			greska1.setManaged(true);
+	    			greska1.setText("Neispravna sifra.");
+	    			return;
+	    		}
+	    		
+	    		greska1.setText(" ");
+	    		
+	    		//sta se pojavljuje kada se prijavim kao kupac:
+	    		
+	    		VBox kupac=new VBox(10);
+	    		
+	    		VBox kupacinfo=new VBox(10);
+	    		kupac.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203),CornerRadii.EMPTY,Insets.EMPTY)));
+	    		
+	    		String ki=tfKorisnickoIme.getText();
+				Kupac kupacS1=null;
+				TreeMap<Integer,Kupac>kupci1=Kupac.getKupci();
+				for(Kupac kup: kupci1.values())
+					if(kup.getKorisnickoIme().equals(ki))
+						kupacS1=kup;
+				final Kupac kupacS=kupacS1;
+	    		
+				
+				VBox desno=new VBox(10);
+				Label prazno=new Label();
+	    		Label dobrodosli=new Label("Dobro nam dosli!");
+	    		dobrodosli.setFont(Font.font("Comic Sans MS", 15));
+	    		dobrodosli.setMinWidth(120);
+	    		dobrodosli.setBackground(new Background(new BackgroundFill(Color.rgb(255,192,203),CornerRadii.EMPTY, Insets.EMPTY)));
+	    		dobrodosli.setTextAlignment(TextAlignment.CENTER);
+	    		dobrodosli.setStyle("-fx-font-weight: bold");
+	    		Label kupac_ime=new Label("Ime: "+kupacS.getIme());
+	    		
+
+	    		
+	    		Label kupac_prezime=new Label("Prezime: "+kupacS.getPrezime());
+	    		
+	    		
+	    	
+	    		Label kupac_grad=new Label("Grad: "+kupacS.getGrad());
+	    		
+	    		Label kupac_adresa=new Label();
+	    		if(kupacS.getAdresa()==null)
+	    			kupac_adresa.setText("Adresa: Nije navedena");
+	    		else
+	    			kupac_adresa.setText("Adresa: "+kupacS.getAdresa());
+	    		
+	    		Label kupac_drzava=new Label("Drzava: "+kupacS.getDrzava());
+	    		
+	    		Label kupac_postbr=new Label("Postanski broj: "+kupacS.getPostanskiBroj());
+	    	
+	    		Label kupac_pol=new Label("Pol: "+kupacS.getPol());
+	    		Label kupac_telefon=new Label();
+	    		
+	    		if(kupacS.getTelefon()==null)
+	    			kupac_telefon.setText("Telefon: Nije naveden");
+	    		else
+	    			kupac_telefon.setText("Telefon: "+kupacS.getTelefon());
+	    		Label kupac_email=new Label("Email: "+kupacS.getEmail());
+	    		Label kupac_ID=new Label("ID: "+kupacS.getID());
+	    		kupacinfo.getChildren().addAll(prazno,dobrodosli,kupac_ime,kupac_prezime,kupac_grad,kupac_adresa,kupac_drzava,kupac_postbr,kupac_pol,kupac_telefon,kupac_email,kupac_ID);
+	    		kupacinfo.setBackground(new Background(new BackgroundFill(Color.rgb(255, 250, 250),CornerRadii.EMPTY,Insets.EMPTY)));
+	    		kupacinfo.setAlignment(Pos.CENTER);
+	    		VBox.setMargin(kupacinfo, new Insets(7,12,7,12));
+	    		VBox kupacnarudzbe=new VBox(10);
+	    		kupacnarudzbe.setAlignment(Pos.CENTER);
+	    		Label kupac_on=new Label("Broj obavljenih narudzbi: "+kupacS.brojObavljenihNarudzbi());
+	    		Label kupac_cek=new Label("Broj narudzbi na cekanju: "+kupacS.narudzbeNaCekanju());
+	    		Label kupac_vr=new Label("Vrijednost narudzbi na cekanju: "+kupacS.vrijednostNarudzbi());
+	    		
+	    		VBox.setMargin(kupacnarudzbe, new Insets(5, 10, 5, 10));
+	    		kupacnarudzbe.getChildren().addAll(kupac_on,kupac_cek,kupac_vr);
+	    	
+	    	
+	    		
+	    		kupacnarudzbe.setBackground(new Background(new BackgroundFill(Color.rgb(255, 250, 250),CornerRadii.EMPTY,Insets.EMPTY)));
+	    		//kupacnarudzbe.setStyle(cssLayout);
+	    		
+	    		//lijevo.setBackground(new Background(new BackgroundFill(Color.rgb(255, 250, 250),CornerRadii.EMPTY,Insets.EMPTY)));
+	    		//HBox izbori=new HBox(10);
+	    		Button izbor1=new Button("Vidi svoje narudzbe");
+	    		Button izbor2=new Button("Vidi narudzbe na cekanju:");
+	    		Button izbor3=new Button("Vidi raspolozive proizvode:");
+	    		HBox jedan=new HBox(10);
+	    		jedan.setAlignment(Pos.CENTER);
+	    		jedan.getChildren().addAll(izbor1,izbor2,izbor3);
+	    		Button izbor4=new Button("Izadji");
+	    		izbor4.setAlignment(Pos.BOTTOM_RIGHT);
+	    		desno.getChildren().addAll(jedan,izbor4);
+	    		desno.setAlignment(Pos.CENTER);
+	    		desno.setPadding(new Insets(30,20,30,20));
+	    		kupac.getChildren().addAll(kupacinfo,kupacnarudzbe,desno);
+	    		
+	    		Scene scene2=new Scene(kupac,500,540);
+	    		primaryStage.setScene(scene2);
+	    	    //primaryStage.show();
+	    	    
+	    	    izbor1.setOnAction(en->{
+	    	    	
+	    	    	
+	    	    	TableView tableView = new TableView();
+	    	    	VBox tvvb=new VBox(10);
+	    	    	VBox.setMargin(tvvb,new Insets(10,10,10,10));
+	    	    	tvvb.getChildren().add(tableView);	    	    	
+	    	    	
+	    	    	TableColumn<Map, String> column1 = new TableColumn<>("Datum narudzbe:");
+	    	        TableColumn<Map,String>  column2=new TableColumn<>("Datum isporuke:");
+	    	        TableColumn<Map,String> column3=new TableColumn<>("Vrijednost narudzbe:");
+	    	        
+	    	        column1.setCellValueFactory(new MapValueFactory<>("dat_narudzbe"));
+	    	        column2.setCellValueFactory(new MapValueFactory<>("dat_isporuke"));
+	    	        column3.setCellValueFactory(new MapValueFactory<>("vr_narudzbe"));
+	    	        
+	    	        column1.prefWidthProperty().bind(tableView.widthProperty().multiply(0.3));
+	    	        column2.prefWidthProperty().bind(tableView.widthProperty().multiply(0.3));
+	    	        column3.prefWidthProperty().bind(tableView.widthProperty().multiply(0.4));
+	    	        
+	    	        column1.setResizable(false);
+	    	        column1.setResizable(false);
+	    	        column1.setResizable(false);
+	    	  
+	    	        
+	    	        
+	    	        tableView.getColumns().add(column1);
+	    	        tableView.getColumns().add(column2);
+	    	        tableView.getColumns().add(column3);
+	    	        
+	    	        //ObservableList<Map<String, Object>> items = FXCollections.<Map<String, Object>>observableArrayList();
+	    	        
+	    	        TreeMap<Integer,Narudzba>narudzbe=Narudzba.getNarudzbe();
+	    	        
+	    			for(Narudzba n: narudzbe.values()) {
+	    				int id=kupacS.getID();
+	    				//System.out.println(id);
+	    				//System.out.println("-----");
+	    				int id1=n.getKupac().getID();
+	    				//System.out.println(id1+" da");
+	    				//System.out.println("-------");
+	    				if(n.getDatumIsporuke()!=null && id==id1) {
+	    					
+	    					Map<String,Object>m1=new HashMap<>();
+	    					m1.put("dat_narudzbe", n.getDatumNarudzbe());
+	    					m1.put("dat_isporuke", n.getDatumIsporuke());
+	    					DecimalFormat df = new DecimalFormat("#.00");
+	    					m1.put("vr_narudzbe", df.format(n.getVrijednostNarudzbe()));
+	    					m1.put("id",n.getID());
+	   
+	    					tableView.getItems().add(m1);
+	    				
+	    				}
+	    			}	    	        
+	    	        
+	    	        VBox buttons1=new VBox(10);
+	    	        Button odjava=new Button("Nazad");
+	    	        Button prikaziDetalje=new Button("Detalji");
+	    	        buttons1.getChildren().addAll(odjava,prikaziDetalje);
+	    	        buttons1.setAlignment(Pos.CENTER);
+	    	        VBox izbor1vb=new VBox(10);
+	    	        VBox prikaziD=new VBox();
+	    	        prikaziD.setPadding(new Insets(5,10,0,20));
+	    	        //prikaziD.getChildren().addAll(table1);
+	    	        prikaziD.setManaged(false);
+	    	        //VBox tv1 = new VBox(tableView);
+	    	        izbor1vb.getChildren().addAll(tvvb,buttons1,prikaziD);
+	    	        izbor1vb.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203), CornerRadii.EMPTY, Insets.EMPTY)));
+	    	        Scene scene3=new Scene(izbor1vb,450,470);
+		    		primaryStage.setScene(scene3);
+		    		
+		    		odjava.setOnAction(en1->{
+		    			primaryStage.setScene(scene2);
+		    		});
+		    		
+		    		prikaziDetalje.setOnAction(enn2->{
+		    			
+		    			TableView table1=new TableView();
+		    	
+		    			
+		    			TableColumn<Map, String> column1a = new TableColumn<>("Artikal:");
+		    	        TableColumn<Map,String>  column2a=new TableColumn<>("Kolicina:");
+		    	        TableColumn<Map,String> column3a=new TableColumn<>("Cijena po komadu:");
+		    	        TableColumn<Map,String> column4a=new TableColumn<>("Prodajno mjesto:");
+		    	        
+		    	        column1a.setCellValueFactory(new MapValueFactory<>("artikal"));
+		    	        column2a.setCellValueFactory(new MapValueFactory<>("kolicina"));
+		    	        column3a.setCellValueFactory(new MapValueFactory<>("cijena"));
+		    	        //column4a.setCellValueFactory(new MapValueFactory<>("prodajnomj"));
+		    	        
+		    	        column1a.prefWidthProperty().bind(table1.widthProperty().multiply(0.333));
+		    	        column2a.prefWidthProperty().bind(table1.widthProperty().multiply(0.333));
+		    	        column3a.prefWidthProperty().bind(table1.widthProperty().multiply(0.333));
+		    	        //column4a.prefWidthProperty().bind(table1.widthProperty().multiply(0.3));
+		    	        
+		    	        column1a.setResizable(false);
+		    	        column2a.setResizable(false);
+		    	        column3a.setResizable(false);
+		    	  
+		    	        
+		    	        
+		    	        table1.getColumns().add(column1a);
+		    	        table1.getColumns().add(column2a);
+		    	        table1.getColumns().add(column3a);
+		    	       // table1.getColumns().add(column4a);
+		    	        
+		    	        
+		    	        
+		    	        Map<String,Object> selected=(HashMap<String,Object>)tableView.getSelectionModel().getSelectedItem();
+						if(prikaziD.isManaged() && prikaziD.isVisible()) {
+							prikaziD.setManaged(false);
+							prikaziD.setVisible(false);
+							return;
+						}
+						
+						table1.getItems().clear();
+						
+						
+		    	        int ID=(int)selected.get("id");
+						Narudzba narudzba=narudzbe.get(ID);
+						
+						if(selected==null)
+							return;	
+						
+		    	        
+		    	        TreeMap<Integer,ArtikalNarudzbe> artikliNarudzbe=ArtikalNarudzbe.getArtikliNarudzbe();
+		    	        
+		    	        for(ArtikalNarudzbe a:artikliNarudzbe.values()) {
+		    	        	if(!a.getNarudzba().equals(narudzba))
+								continue;
+							
+							Map<String,Object>ma=new HashMap<>();
+							ma.put("artikal", a.getProizvod().getNaziv());
+							ma.put("kolicina", a.getKolicina());
+							DecimalFormat df = new DecimalFormat("#.00");
+							ma.put("cijena", df.format(a.getCijenaKomada()));
+							//ma.put("prodajnomj",a.getNarudzba().getTrgovac().getProdajnoMjesto().getNaziv());
+							
+							table1.getItems().add(ma);
+		    	        }
+		    	        Label pm=new Label();
+		    	        ProdajnoMjesto pm1=narudzba.getTrgovac().getProdajnoMjesto();
+		    	        //String naziv=pm1.getNaziv();
+						pm.setText(""+pm1);
+		    	        
+		    	        pm.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID,CornerRadii.EMPTY,BorderWidths.DEFAULT)));
+					    pm.setBackground(new Background(new BackgroundFill(Color.AQUAMARINE,CornerRadii.EMPTY,Insets.EMPTY)));
+					    pm.setMinWidth(400);
+					    pm.setMinHeight(25);
+					    pm.setAlignment(Pos.CENTER);
+					    Button zatvori=new Button("Zatvori");
+						prikaziD.getChildren().addAll(table1,pm,zatvori);
+						prikaziD.setVisible(true);
+						prikaziD.setManaged(true);
+						
+						zatvori.setOnAction(ee->{
+							prikaziD.getChildren().clear();
+							prikaziD.setVisible(false);
+							prikaziD.setManaged(false);
+						});
+						
+						
+						
+		    	        
+		    			
+		    			
+		    		});
+	    	    });
+	    	    
+	    	    izbor2.setOnAction(en1->{
+	    	    	TableView tableView2 = new TableView();
+	    	    	
+	    	    	TableColumn<Map, String> column1 = new TableColumn<>("Datum narudzbe:");
+	    	        TableColumn<Map,String>  column2=new TableColumn<>("Datum isporuke:");
+	    	        TableColumn<Map,String> column3=new TableColumn<>("Vrijednost narudzbe:");
+	    	        
+	    	        column1.setCellValueFactory(new MapValueFactory<>("dat_narudzbe"));
+	    	        column2.setCellValueFactory(new MapValueFactory<>("dat_isporuke"));
+	    	        column3.setCellValueFactory(new MapValueFactory<>("vr_narudzbe"));
+	    	        
+	    	        column1.prefWidthProperty().bind(tableView2.widthProperty().multiply(0.3));
+	    	        column2.prefWidthProperty().bind(tableView2.widthProperty().multiply(0.3));
+	    	        column3.prefWidthProperty().bind(tableView2.widthProperty().multiply(0.4));
+	    	        
+	    	        column1.setResizable(false);
+	    	        column2.setResizable(false);
+	    	        column3.setResizable(false);
+	    	        
+	    	        tableView2.getColumns().add(column1);
+	    	        tableView2.getColumns().add(column2);
+	    	        tableView2.getColumns().add(column3);
+	    	        
+	    	        ScrollPane sp=new ScrollPane();
+	    			sp.setContent(tableView2);
+	    			sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+	    			sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+	    	        
+	    			TreeMap<Integer,Narudzba> narudzbe=Narudzba.getNarudzbe();
+	    	        
+	    	        for(Narudzba n: narudzbe.values()) {
+	    				
+	    	        	if(n.getDatumIsporuke()==null && n.getKupac().equals(kupacS)) {
+	    					//System.out.println(n);
+	    	        		Map<String,Object>m2=new HashMap<>();
+	    	        		m2.put("dat_narudzbe", n.getDatumNarudzbe());
+	    	        		m2.put("dat_isporuke", "Nije definisano");
+	    	        		DecimalFormat df = new DecimalFormat("#.00");
+	    	        		m2.put("vr_narudzbe", df.format(n.getVrijednostNarudzbe()));
+	    	        		m2.put("id",n.getID());
+	    				
+	    	        		tableView2.getItems().add(m2);
+	    	        	}
+	    	        
+	    	        }
+	    	        
+	    	        VBox buttons2=new VBox(10);
+	    	        Button odjava2=new Button("Nazad");
+	    	        Button prikaziDetalje2=new Button("Detalji");
+	    	        Button otkazi=new Button("Otkazi izabranu narudzbu");
+	    	        VBox izbor2vb=new VBox(10);
+	    	        VBox prikaziD2=new VBox(10);
+	    	        prikaziD2.setPadding(new Insets(5,10,0,20));
+	    	        prikaziD2.setManaged(false);
+	    	        VBox tv2 = new VBox(tableView2);
+	    	        VBox.setMargin(tv2,new Insets(10,10,10,10));
+	    	        buttons2.getChildren().addAll(odjava2,prikaziDetalje2,otkazi);
+	    	        izbor2vb.getChildren().addAll(tv2,buttons2,prikaziD2);
+	    	        buttons2.setAlignment(Pos.CENTER);
+	    	        izbor2vb.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203), CornerRadii.EMPTY, Insets.EMPTY)));
+	    	        Scene scene4=new Scene(izbor2vb,550,550);
+	    	        primaryStage.setScene(scene4);
+	    	        
+	    	        odjava2.setOnAction(en->{
+		    			primaryStage.setScene(scene2);
+		    		});
+	    	        
+	    	        prikaziDetalje2.setOnAction(enn1->{
+	    	        	TableView table2=new TableView();
+		    			
+		    			TableColumn<Map, String> column1b = new TableColumn<>("Artikal:");
+		    	        TableColumn<Map,String>  column2b=new TableColumn<>("Kolicina:");
+		    	        TableColumn<Map,String> column3b=new TableColumn<>("Cijena po komadu:");
+		    	        
+		    	        
+		    	        column1b.setCellValueFactory(new MapValueFactory<>("artikal"));
+		    	        column2b.setCellValueFactory(new MapValueFactory<>("kolicina"));
+		    	        column3b.setCellValueFactory(new MapValueFactory<>("cijena"));
+		    	        
+		    	        
+		    	        column1b.prefWidthProperty().bind(table2.widthProperty().multiply(0.333));
+		    	        column2b.prefWidthProperty().bind(table2.widthProperty().multiply(0.333));
+		    	        column3b.prefWidthProperty().bind(table2.widthProperty().multiply(0.333));
+		    	        
+		    	        
+		    	        column1b.setResizable(false);
+		    	        column2b.setResizable(false);
+		    	        column3b.setResizable(false);
+		    	        
+		    	        table2.getColumns().add(column1b);
+		    	        table2.getColumns().add(column2b);
+		    	        table2.getColumns().add(column3b);
+		    	        
+		    	        Map<String,Object> selected=(HashMap<String,Object>)tableView2.getSelectionModel().getSelectedItem();
+						if(prikaziD2.isManaged() && prikaziD2.isVisible()) {
+							prikaziD2.setManaged(false);
+							prikaziD2.setVisible(false);
+							return;
+						}
+						
+						table2.getItems().clear();
+						
+						
+		    	        int ID=(int)selected.get("id");
+						Narudzba narudzba=narudzbe.get(ID);
+						System.out.println(narudzba.getTrgovac());
+						int IDt=(int)selected.get("idtr");
+						TreeMap<Integer,Trgovac> trr=Trgovac.getTrgovci();
+						Trgovac tr1=trr.get(IDt);
+						System.out.println(tr1);
+						
+						if(selected==null)
+							return;	
+						
+						TreeMap<Integer,ArtikalNarudzbe> artikliNarudzbe=ArtikalNarudzbe.getArtikliNarudzbe();
+		    	        
+		    	        for(ArtikalNarudzbe a:artikliNarudzbe.values()) {
+		    	        	if(!a.getNarudzba().equals(narudzba))
+								continue;
+							
+							Map<String,Object>ma1=new HashMap<>();
+							ma1.put("artikal", a.getProizvod().getNaziv());
+							ma1.put("kolicina", a.getKolicina());
+							DecimalFormat df = new DecimalFormat("#.00");
+							ma1.put("cijena", df.format(a.getCijenaKomada()));
+							//ma.put("prodajnomj",a.getNarudzba().getTrgovac().getProdajnoMjesto().getNaziv());
+							
+							table2.getItems().add(ma1);
+		    	        }
+		    	        Label pm1=new Label();
+		    	        ProdajnoMjesto pm2=narudzba.getTrgovac().getProdajnoMjesto();
+		    	        //System.out.println(narudzba.getTrgovac().getProdajnoMjesto().getNaziv());
+		    	        //String naziv=pm1.getNaziv();
+						pm1.setText(""+pm2);
+		    	        
+		    	        pm1.setBorder(new Border(new BorderStroke(Color.GREY, BorderStrokeStyle.SOLID,CornerRadii.EMPTY,BorderWidths.DEFAULT)));
+					    pm1.setBackground(new Background(new BackgroundFill(Color.LIGHTGREY,CornerRadii.EMPTY,Insets.EMPTY)));
+					    pm1.setMinWidth(400);
+					    pm1.setMinHeight(25);
+					    pm1.setAlignment(Pos.CENTER);
+					    Button zatvori1=new Button("Zatvori");
+						prikaziD2.getChildren().addAll(table2,zatvori1);
+						prikaziD2.setVisible(true);
+						prikaziD2.setManaged(true);
+						
+						zatvori1.setOnAction(ee->{
+							prikaziD2.getChildren().clear();
+							prikaziD2.setVisible(false);
+							prikaziD2.setManaged(false);
+						});
+						
+						
+	    	        });
+	    	        
+	    	        otkazi.setOnAction(es->{
+	    	        	
+	    	        	Map<String,Object> selected=(HashMap<String,Object>)tableView2.getSelectionModel().getSelectedItem();
+	    	        	
+	    	        	if(selected==null)
+	    	        		return;
+	    	        	
+	    	        	int ID=(int)selected.get("id");
+						Narudzba narudzba=narudzbe.get(ID);
+						
+						TreeMap<Integer,Narudzba> neprihvacene=Narudzba.getNeprihvaceneNarudzbe();
+						neprihvacene.remove(ID);
+						
+						MySQL.deleteNarudzba(ID);
+						
+						tableView2.getItems().remove(selected);
+						
+						if(prikaziD2.isManaged() && prikaziD2.isVisible()) {
+							prikaziD2.setManaged(false);
+							prikaziD2.setVisible(false);
+						}
+						
+						narudzbe.remove(ID);
+						
+	    	        });
+	    	    });
+	    	    
+	    	    
+	    	    
+	    	    izbor3.setOnAction(en2->{
+	    	    	
+	    	    	TableView tableView3=new TableView();
+	    	    	
+	    	    	TableColumn<Map,String> column1=new TableColumn("Naziv proizvoda:");
+	    	    	TableColumn<Map,String> column2=new TableColumn("Cijena proizvoda:");
+	    	    	
+	    	    	column1.setCellValueFactory(new MapValueFactory<>("naziv_proizvoda"));
+	    	        column2.setCellValueFactory(new MapValueFactory<>("cijena_proizvoda"));
+	    	       
+	    	        
+	    	        column1.prefWidthProperty().bind(tableView3.widthProperty().multiply(0.6));
+	    	        column2.prefWidthProperty().bind(tableView3.widthProperty().multiply(0.4));
+	    	        
+	    	        
+	    	        column1.setResizable(false);
+	    	        column2.setResizable(false);
+	    	        
+	    	        tableView3.getColumns().add(column1);
+	    	        tableView3.getColumns().add(column2);
+	    	        
+	    	        TreeMap<Integer,Proizvod> proizvodi=Proizvod.getProizvodi();
+	    	        
+	    	        for(Proizvod p:proizvodi.values()) {
+	    				
+	    	        	Map<String,Object>m3=new HashMap<>();
+	    				m3.put("naziv_proizvoda", p.getNaziv());
+	    				DecimalFormat df = new DecimalFormat("#.00");
+	    				m3.put("cijena_proizvoda", df.format(p.getCijena()));
+	    				
+	    				
+	    				tableView3.getItems().add(m3);
+	    	        
+	    	        }
+	    	        
+	    	        Button odjava3=new Button("Nazad");
+	    	        Button naruci=new Button("Naruci");
+	    	        VBox newnarudzba=new VBox(10);
+	    	        VBox buttons3=new VBox(10);
+	    	        newnarudzba.setPadding(new Insets(5,10,0,20));
+	    	        newnarudzba.setManaged(false);
+	    	        buttons3.getChildren().addAll(odjava3,naruci);
+	    	        VBox izbor3vb=new VBox(10);
+	    	        buttons3.setAlignment(Pos.CENTER);
+	    	        VBox tv3 = new VBox(tableView3);
+	    	        VBox.setMargin(tv3,new Insets(10,10,10,10));
+	    	        izbor3vb.getChildren().addAll(tv3,buttons3,newnarudzba);
+	    	        izbor3vb.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203), CornerRadii.EMPTY, Insets.EMPTY)));
+	    	        Scene scene5=new Scene(izbor3vb,500,500);
+	    	        primaryStage.setScene(scene5);
+	    	        odjava3.setOnAction(en->{
+		    			primaryStage.setScene(scene2);
+		    		});
+	    	        
+	    	        naruci.setOnAction(ex1->{
+	    	        	
+	    	        	HBox lijevastr=new HBox(10);
+	    	        	HBox desnastr=new HBox(10);
+	    	        	VBox sve=new VBox(10);
+	    	        	
+	    	        	Label raspolozivi=new Label("Raspolozivi proizvodi:");
+	    	        	TableView tableView5=new TableView();
+	    	        	
+	    	        	TableColumn<Map,String> column1c=new TableColumn("Artikal:");
+		    	    	TableColumn<Map,String> column2c=new TableColumn("Cijena artikla:");
+		    	    	
+		    	    	column1c.setCellValueFactory(new MapValueFactory<>("artikal"));
+		    	        column2c.setCellValueFactory(new MapValueFactory<>("cijena_artikla"));
+		    	       
+		    	        
+		    	        column1c.prefWidthProperty().bind(tableView5.widthProperty().multiply(0.49));
+		    	        column2c.prefWidthProperty().bind(tableView5.widthProperty().multiply(0.4));
+		    	        
+		    	        
+		    	        column1c.setResizable(false);
+		    	        column2c.setResizable(false);
+		    	        
+		    	        tableView5.getColumns().add(column1c);
+		    	        tableView5.getColumns().add(column2c);
+		    	        
+		    	        ScrollPane sp2=new ScrollPane();
+						sp2.setContent(tableView5);
+						sp2.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+						sp2.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+						
+						TreeMap<Integer,Proizvod>proizvodi2=Proizvod.getProizvodi();
+						for(Proizvod p: proizvodi2.values()) {
+									
+							Map<String,Object>m12=new HashMap<>();
+							m12.put("artikal", p.getNaziv());
+							DecimalFormat df = new DecimalFormat("#.00");
+							m12.put("cijena_artikla", df.format(p.getCijena()));
+							m12.put("id", p.getID());
+							System.out.println(p.getID());
+							
+							tableView5.getItems().add(m12);
+						}
+						
+						//tableView5.setMinWidth(250);
+						//tableView5.setMaxHeight(390);
+						//tableView5.setPadding(new Insets(10,250,100,10));
+						
+						
+						Label kolicina=new Label("Kolicina:");
+						TextField kolicina_tf=new TextField();
+						kolicina_tf.setMinWidth(50);
+						VBox kolvb=new VBox(10);
+						kolvb.getChildren().addAll(kolicina,kolicina_tf);
+						
+						
+						Button izbor=new Button("Izaberi");
+						
+						
+						lijevastr.getChildren().addAll(raspolozivi,tableView5,kolvb,izbor);
+						lijevastr.setPadding(new Insets(0,370,0,0));
+						
+						
+						
+						Label tekst=new Label("Vasa narudzba:");
+						TableView tableView6=new TableView();
+						TableColumn<Map,String> column16=new TableColumn("Artikal:");
+		    	    	TableColumn<Map,String> column26=new TableColumn("Cijena artikla:");
+		    	    	TableColumn<Map,String> column36=new TableColumn("Kolicina:");
+		    	    	
+		    	    	column16.setCellValueFactory(new MapValueFactory<>("artikal"));
+		    	        column26.setCellValueFactory(new MapValueFactory<>("cijena_artikla"));
+		    	        column36.setCellValueFactory(new MapValueFactory<>("kolicina"));
+		    	       
+		    	        
+		    	        column16.prefWidthProperty().bind(tableView6.widthProperty().multiply(0.4));
+		    	        column26.prefWidthProperty().bind(tableView6.widthProperty().multiply(0.3));
+		    	        column36.prefWidthProperty().bind(tableView6.widthProperty().multiply(0.3));
+		    	        
+		    	        
+		    	        column16.setResizable(false);
+		    	        column26.setResizable(false);
+		    	        column36.setResizable(false);
+		    	        
+		    	        tableView6.getColumns().add(column16);
+		    	        tableView6.getColumns().add(column26);
+		    	        tableView6.getColumns().add(column36);
+		    	        
+		    	        Label greska6=new Label("");
+		    	        Label ukupnol=new Label("Ukupan iznos:");
+		    	        Label ukupno1=new Label("");
+		    	        VBox ukvb=new VBox(10);
+		    	        ukvb.getChildren().addAll(ukupnol,ukupno1);
+		    	        Button izbaci=new Button("Izbaci proizvod");
+		    	        Button brisi=new Button("Izbrisi sve");
+		    	        Button kraj=new Button("Naruci");
+		    	        Button zatvor=new Button("Nazad");
+		    	        VBox dugmici=new VBox(10);
+		    	        dugmici.getChildren().addAll(izbaci,brisi,kraj,zatvor);
+		    	        desnastr.getChildren().addAll(tekst,tableView6,ukvb,dugmici);
+		    	        desnastr.setPadding(new Insets(0,0,0,370));
+		    	        VBox.setMargin(desnastr,new Insets(0,0,10,0));
+		    	      
+		    	        
+		    	        ScrollPane sp3=new ScrollPane();
+						sp2.setContent(tableView6);
+						sp2.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+						sp2.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+						
+						sve.getChildren().addAll(greska6,lijevastr,desnastr);
+						
+						Scene narudzba_s=new Scene(sve,1000,540);
+						sve.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203), CornerRadii.EMPTY, Insets.EMPTY)));
+						primaryStage.setScene(narudzba_s);
+						
+						izbor.setOnAction(sa->{
+							
+							Map<String,Object> selectedd=(HashMap<String,Object>)tableView5.getSelectionModel().getSelectedItem();
+							if(selectedd== null)
+								return;
+							if(kolicina_tf.getText().equals("") || kolicina_tf.getText().equals("0")) {
+								greska6.setVisible(true);
+								greska6.setManaged(true);
+								greska6.setText("Neispravan unos.");
+								return;
+							}
+							
+							
+							int kolicinab=0;
+							
+							try {
+								kolicinab=Integer.parseInt(kolicina_tf.getText());
+							}catch(Exception excep) {
+								greska6.setText("Neispravan unos.");
+								greska6.setVisible(true);
+								greska6.setManaged(true);
+								return;
+							}
+							if(greska6.isManaged() && greska6.isVisible()) {
+								greska6.setVisible(false);
+								greska6.setManaged(false);
+							}
+							
+							int id_pro=(int)selectedd.get("id");
+							System.out.println(id_pro);
+							Proizvod proizvod=proizvodi2.get(id_pro);
+							
+							double ukupno=0;
+							for(Object mapa: tableView6.getItems()) {
+								Map<String,Object>m=(HashMap<String, Object>)mapa;
+								ukupno+=(double)m.get("cijena_artikla")*(int)m.get("kolicina");
+							}
+							
+							for(Object mapa: tableView6.getItems()) {
+								Map<String,Object>m=(HashMap<String, Object>)mapa;
+								if((int)m.get("id")==id_pro) {
+									m.put("kolicina",(int)m.get("kolicina")+kolicinab);
+									ukupno+=(double)m.get("cijena_artikla")*kolicinab;
+									DecimalFormat df = new DecimalFormat("#.00");
+									BigDecimal bd=BigDecimal.valueOf(ukupno);
+									bd=bd.setScale(3,RoundingMode.HALF_UP);
+									ukupno1.setText(bd.doubleValue()+"");
+									tableView6.refresh();
+									return;
+								}
+							}
+							DecimalFormat df = new DecimalFormat("#.00");
+							Map<String,Object>m1=new HashMap<>();
+							m1.put("artikal", proizvod.getNaziv());
+							BigDecimal bd=BigDecimal.valueOf(proizvod.getCijena());
+							bd=bd.setScale(3,RoundingMode.HALF_UP);
+							m1.put("cijena_artikla",bd.doubleValue());
+							m1.put("kolicina", kolicinab);
+							m1.put("id", proizvod.getID());
+							
+							tableView6.getItems().add(m1);
+							ukupno+=proizvod.getCijena()*kolicinab;
+							BigDecimal bd1=BigDecimal.valueOf(ukupno);
+							bd1=bd1.setScale(3,RoundingMode.HALF_UP);
+							ukupno1.setText(bd1.doubleValue()+"");
+							
+						});
+						
+						izbaci.setOnAction(sa1->{
+							Map<String,Object> selected=(HashMap<String,Object>)tableView6.getSelectionModel().getSelectedItem();
+							if(selected==null)
+								return;
+							
+							int id_izbaci=(int)selected.get("id");
+							
+							if(tableView6.getItems().size()==1)
+								ukupno1.setText("");
+							else {
+								double ukupno=Double.parseDouble(ukupno1.getText())-(double)selected.get("cijena_artikla")*(int)selected.get("kolicina");
+								BigDecimal bd1=BigDecimal.valueOf(ukupno);
+								bd1=bd1.setScale(3,RoundingMode.HALF_UP);
+								ukupno1.setText(bd1.doubleValue()+"");
+							}
+							
+							tableView6.getItems().remove(selected);
+						});
+						
+						brisi.setOnAction(sa2->{
+							ukupno1.setText("");
+							tableView6.getItems().clear();
+							tableView6.refresh();
+						});
+						
+						kraj.setOnAction(sa3->{
+							//if(ukupno1.getText().isEmpty()) {
+								//greska6.setText("Narudzba je prazna.");
+								//return;
+							//}
+							TreeMap<Integer,Narudzba> narudzbe=Narudzba.getNarudzbe();
+							int narudzba_id=narudzbe.lastKey()+1;
+							int kupac_id=kupacS.getID();
+							LocalDate datum=LocalDate.now();
+							String datum_narudzbe=datum.toString();
+							String datum_isporuke=null;
+							String napomena=null;
+							Narudzba n=new Narudzba(narudzba_id,kupac_id,-1,datum_narudzbe,
+									datum_isporuke,napomena);
+							MySQL.insertNarudzba(n);
+							
+							TreeMap<Integer,ArtikalNarudzbe>artikli=ArtikalNarudzbe.getArtikliNarudzbe();
+							for(Object mapa: tableView6.getItems()) {
+								Map<String,Object>m=(HashMap<String, Object>)mapa;
+								int proID=(int)m.get("id");
+								int kolPr=(int)m.get("kolicina");
+								double cijP=(double)m.get("cijena_artikla");
+								int anID=artikli.lastKey()+1;
+								ArtikalNarudzbe a=new ArtikalNarudzbe(narudzba_id,proID,kolPr,cijP,anID);
+								MySQL.insertArtikalNarudzbe(a);
+							}
+							primaryStage.setScene(scene2);
+							
+							
+							
+						});
+						
+						zatvor.setOnAction(sa4->{
+							primaryStage.setScene(scene2);
+						});
+						
+	    	        	
+	    	        	
+	    	        	
+	    	        });
+	    	        
+	    	        
+	    	        
+	    	        
+	    	        
+	    	    	
+	    	    	
+	    	    });
+	    	    
+	    	    izbor4.setOnAction(en3->{
+	    	    	tfKorisnickoIme.setText("");
+					lozinka.setText("");
+					k.setSelected(false);
+					t.setSelected(false);
+					primaryStage.setScene(scene);
+	    	    });
+	    	}
+	    	
+	    	//--------------------------------- TRGOVAC --------------------
+	    	if(t.isSelected()) {
+	    		
+	    		greska1.setText(" ");
+	    		
+	    		if(!Trgovac.korisnickoimeispravno(tfKorisnickoIme.getText())) {
+	    			greska1.setText("Neispravno korisnicko ime");
+	    			return;
+	    		}
+	    		
+	    		if(!Trgovac.lozinkaIspravna(tfKorisnickoIme.getText(), lozinka.getText())) {
+	    			greska1.setText("Neispravna sifra");
+	    			return;
+	    		}
+	    		
+	    		greska1.setText(" ");
+	    		
+	    		//sta se pojavljuje kada se prijavim kao trgovac
+	    		
+	    		VBox trgovac12=new VBox(10);
+	    		
+	    		VBox trgovacinfo=new VBox(10);
+	    		trgovacinfo.setBackground(new Background(new BackgroundFill(Color.rgb(255, 250, 250),CornerRadii.EMPTY,Insets.EMPTY)));
+	    		trgovacinfo.setMinWidth(300);
+	    		VBox.setMargin(trgovacinfo, new Insets(7, 7, 7, 7));
+	    		String ti=tfKorisnickoIme.getText();
+	    		Trgovac trS1=null;
+	    		TreeMap<Integer,Trgovac> trgovci1=Trgovac.getTrgovci();
+	    		for(Trgovac trgo: trgovci1.values())
+	    			if(trgo.getKorisnickoIme().equals(ti))
+	    				trS1=trgo;
+	    		final Trgovac trgovacS=trS1;
+	    		ProdajnoMjesto pmtrg=trgovacS.getProdajnoMjesto();
+	    		
+	    		
+	    		
+	    		Label dobrodoslit=new Label("Dobro dosli!");
+	    		dobrodoslit.setStyle("-fx-font-weight: bold");
+	    		dobrodoslit.setFont(Font.font("Comic Sans MS", 15));
+	    		dobrodoslit.setMinWidth(120);
+	    		dobrodoslit.setAlignment(Pos.CENTER);
+	    		dobrodoslit.setBackground(new Background(new BackgroundFill(Color.rgb(255,192,203),CornerRadii.EMPTY, Insets.EMPTY)));
+	    		Label trgovac_ime=new Label("Ime: "+trgovacS.getIme());
+	    		Label trgovac_prezime=new Label("Prezime: "+trgovacS.getPrezime());
+	    		Label trgovac_pol=new Label("Pol: "+trgovacS.getPol());
+	    		Label trgovac_telefon=new Label();
+	    		if(trgovacS.getTelefon()==null)
+	    			trgovac_telefon.setText("Telefon: Nije naveden ");
+	    		else
+	    			trgovac_telefon.setText("Telefon: "+trgovacS.getTelefon());
+	    		
+	    		Label trgovac_email=new Label("Email: "+trgovacS.getEmail());
+	    		Label trgovac_id=new Label("ID: "+trgovacS.getID());
+	    		Label trgovac_prodajnom=new Label("Prodajno mjesto: "+pmtrg);
+	    		
+	    			
+	    		TreeMap<Integer,Narudzba> prihvacene1=Trgovac.ucitajNarudzbeTrgovca(trgovacS);
+	    		trgovacinfo.getChildren().addAll(dobrodoslit,trgovac_ime,trgovac_prezime,trgovac_pol,trgovac_telefon,trgovac_email,trgovac_id,trgovac_prodajnom);
+	    		trgovacinfo.setPadding(new Insets(10,20,10,20));
+	    		trgovacinfo.setAlignment(Pos.CENTER);
+	    		trgovacinfo.setMinHeight(260);
+	    		
+	    		VBox izboritr=new VBox(10);
+	    		Button izbortr1=new Button("Narudzbe na cekanju");
+	    		Button odobrene_narudzbe=new Button("Odobrene narudzbe");
+	    		izbortr1.setMinWidth(180);	
+	    		odobrene_narudzbe.setMinWidth(180);	
+	    		HBox one=new HBox(10);
+	    		one.setAlignment(Pos.CENTER);
+	    		
+	    		one.getChildren().addAll(izbortr1,odobrene_narudzbe);
+	    		Button novoprodajno=new Button("Dodaj prodajno mjesto");
+	    		Button novitrgovac=new Button("Prodajna mjesta/Dodaj trgovca");
+	    		novoprodajno.setMinWidth(180);	
+	    		novitrgovac.setMinWidth(180);
+	    		HBox two=new HBox(10);
+	    		two.setAlignment(Pos.CENTER);
+	    		two.getChildren().addAll(novoprodajno,novitrgovac);
+	    		Button dodajPRO=new Button("Dodaj proizvod");
+	    		Button azurirajproizvod=new Button("Proizvodi(azuriranje)");
+	    		
+	    		HBox three=new HBox(10);
+	    		dodajPRO.setMinWidth(180);	
+	    		azurirajproizvod.setMinWidth(180);	
+	    		three.setAlignment(Pos.CENTER);
+	    		three.getChildren().addAll(dodajPRO,azurirajproizvod);
+	    		Button izbortr2=new Button("Izadji");
+	    		izbortr2.setMinWidth(180);
+	    		HBox dugmee=new HBox(10);
+	    		dugmee.getChildren().add(izbortr2);
+	    		dugmee.setAlignment(Pos.CENTER);
+	    		izboritr.getChildren().addAll(one,two,three,dugmee);
+	    		izboritr.setPadding(new Insets(30,20,30,20));
+	    		trgovac12.getChildren().addAll(trgovacinfo,izboritr);
+	    		trgovac12.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203), CornerRadii.EMPTY, Insets.EMPTY)));
+	    		Scene scene3=new Scene(trgovac12,500,500);
+	    		primaryStage.setScene(scene3);
+	    		
+	    		izbortr1.setOnAction(event->{
+	    			TableView tableView4 = new TableView();
+
+	    			TableColumn<Map, String> column1 = new TableColumn<>("Kupac:");
+	    	        TableColumn<Map,String>  column2=new TableColumn<>("Drzava:");
+	    			TableColumn<Map, String> column3 = new TableColumn<>("Datum narudzbe:");
+	    	        TableColumn<Map,String>  column4=new TableColumn<>("Datum isporuke:");
+	    	        TableColumn<Map,String> column5=new TableColumn<>("Vrijednost narudzbe:");
+	    	        
+	    	        column1.setCellValueFactory(new MapValueFactory<>("kupac"));
+	    	        column2.setCellValueFactory(new MapValueFactory<>("drzava"));
+	    	        column3.setCellValueFactory(new MapValueFactory<>("dat_narudzbe"));
+	    	        column4.setCellValueFactory(new MapValueFactory<>("dat_isporuke"));
+	    	        column5.setCellValueFactory(new MapValueFactory<>("vr_narudzbe"));
+	    	        
+	    	        column1.prefWidthProperty().bind(tableView4.widthProperty().multiply(0.2));
+	    	        column2.prefWidthProperty().bind(tableView4.widthProperty().multiply(0.2));
+	    	        column3.prefWidthProperty().bind(tableView4.widthProperty().multiply(0.2));
+	    	        column4.prefWidthProperty().bind(tableView4.widthProperty().multiply(0.2));
+	    	        column5.prefWidthProperty().bind(tableView4.widthProperty().multiply(0.2));
+	    	        
+	    	        column1.setResizable(false);
+	    	        column2.setResizable(false);
+	    	        column3.setResizable(false);
+	    	        column4.setResizable(false);
+	    	        column5.setResizable(false);
+	    	        
+	    	        tableView4.getColumns().add(column1);
+	    	        tableView4.getColumns().add(column2);
+	    	        tableView4.getColumns().add(column3);
+	    	        tableView4.getColumns().add(column4);
+	    	        tableView4.getColumns().add(column5);
+	    	        
+	    	        ScrollPane sp=new ScrollPane();
+	    			sp.setContent(tableView4);
+	    			sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+	    			sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+	    	        
+	    			TreeMap<Integer,Narudzba> narudzben=Narudzba.getNeprihvaceneNarudzbe();
+	    			//System.out.println(narudzben);
+	    	        
+	    	        for(Narudzba n: narudzben.values()) {
+	    				
+	    	        	boolean pr_mjesto=ProdajnoMjesto.prodajnoPostoji(n.getKupac().getDrzava());
+	    	        	//if(n.getDatumIsporuke()==null || n.getTrgovac().equals(trgovacS)) {
+	    					if(!pr_mjesto) {
+	    						
+	    						Kupac kup=n.getKupac();
+	    						String ime_prezime=kup.getIme()+" "+kup.getPrezime();
+	    						
+	    						Map<String,Object>m2=new HashMap<>();
+	    						m2.put("kupac",ime_prezime);
+	    						m2.put("drzava",kup.getDrzava());
+	    						m2.put("dat_narudzbe", n.getDatumNarudzbe());
+	    						m2.put("dat_isporuke", n.getDatumIsporuke());
+	    						DecimalFormat df = new DecimalFormat("#.00");
+	    						m2.put("vr_narudzbe", df.format(n.getVrijednostNarudzbe()));
+	    						m2.put("id",n.getID());
+	    				
+	    				
+	    						tableView4.getItems().add(m2);
+	    					}
+	    					else {
+	    						Kupac kup=n.getKupac();
+	    						boolean drzava_odg=trgovacS.odgDrzava(kup.getDrzava());
+	    						
+	    						if(drzava_odg) {
+	    							
+	    							String ime_prezime=kup.getIme()+" "+kup.getPrezime();
+	    							Map<String,Object>m21=new HashMap<>();
+		    						m21.put("kupac",ime_prezime);
+		    						m21.put("drzava",kup.getDrzava());
+		    						m21.put("dat_narudzbe", n.getDatumNarudzbe());
+		    						m21.put("dat_isporuke", n.getDatumIsporuke());
+		    						DecimalFormat df = new DecimalFormat("#.00");
+		    						m21.put("vr_narudzbe", df.format(n.getVrijednostNarudzbe()));
+		    						m21.put("id",n.getID());
+		    				
+		    				
+		    						tableView4.getItems().add(m21);
+	    							
+	    						}
+	    					
+	    	        	}
+	    	        	
+	    	        
+	    	        }
+	    	        Label greska_12=new Label("Neispravan unos.");
+	    	        greska_12.setVisible(false);
+	    	        greska_12.setManaged(false);
+	    	        
+	    	        Label prihvati1=new Label("Unesite datum isporuke:");
+	    	       // prihvati1.setVisible(false);
+	    	        //prihvati1.setManaged(false);
+	    	        TextField prihvati_tf=new TextField();
+	    	        //prihvati_tf.setVisible(false);
+	    	        //prihvati_tf.setManaged(false);
+	    	        Button prihvati_1=new Button("Azuriraj");
+	    	        Button zatvori_1=new Button("Zatvori");
+	    	        //zatvori_1.setVisible(false);
+	    	       // zatvori_1.setManaged(false);
+	    	       // prihvati_1.setVisible(false);
+	    	       // prihvati_1.setManaged(false);
+	    	        HBox prihvati_vb=new HBox(10);
+	    	        prihvati_vb.getChildren().addAll(greska_12,prihvati1,prihvati_tf);
+	    	        Button prihvati=new Button("Prihvati narudzbu");
+	    	    
+	    	        Button odjava4=new Button("Nazad");
+	    	        VBox izbor4vb=new VBox(10);
+	    	        
+	    	        VBox tv4 = new VBox(tableView4);
+	    	        VBox.setMargin(tv4,new Insets(10,10,10,10));
+	    	        izbor4vb.getChildren().addAll(tv4,prihvati_vb,prihvati,odjava4);
+	    	        izbor4vb.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203), CornerRadii.EMPTY, Insets.EMPTY)));
+	    	        Scene scene5=new Scene(izbor4vb,600,600);
+	    	        primaryStage.setScene(scene5);
+	    	        
+	    	        prihvati.setOnAction(e1->{
+	    	        	
+		    	        
+		    	       
+		    	        	if(prihvati_tf.getText().isEmpty()) {
+		    	        		greska_12.setText("prazno");
+		    	        		greska_12.setVisible(true);
+		    	    	        greska_12.setManaged(true);
+		    	        	}
+		    	        	Map<String,Object> selected=(HashMap<String,Object>)tableView4.getSelectionModel().getSelectedItem();
+		    	        	if(selected==null)
+		    	        		return;
+		    	        	
+		    	        	int id=(int)selected.get("id");
+		    	        	
+		    	        	Narudzba n=narudzben.get(id);
+		    	        	int id_1=id;
+							
+							int kupacid_1=n.getKupac().getID();
+							
+							int trgovacid_1=n.getTrgovac().getID();
+							String datum_narudzbe1=n.getDatumNarudzbe();
+							
+							String napomena1=n.getNapomena();
+							greska_12.setText("");
+		    	        	String datum=prihvati_tf.getText();
+							String datum_isporuke1=datum;
+							Narudzba n1=new Narudzba(id_1,kupacid_1,trgovacid_1,datum_narudzbe1,
+									datum_isporuke1,napomena1);
+		    	        	tableView4.getItems().remove(selected);
+		    	        	
+		    	        	
+		    	        	
+		    	        	
+		    	        	if(datum.length()!=10) {
+		    	        		greska_12.setText("duzina");
+		    	        		greska_12.setVisible(true);
+		    	    	        greska_12.setManaged(true);
+		    	        	}
+		    	        	
+		    	        	String year=datum.substring(4);
+		    	        	String month=datum.substring(5,7);
+		    	        	String day=datum.substring(8,10);
+		    	        	
+		    	        	int godinaB=0,mjesecB=0,danB=0;
+							try {
+								godinaB=Integer.parseInt(year);
+								mjesecB=Integer.parseInt(month);
+								danB=Integer.parseInt(day);
+							}catch(Exception x) {
+								greska_12.setVisible(true);
+		    	    	        greska_12.setManaged(true);
+								return;
+							}
+							String datum2=n.getDatumNarudzbe();
+							String godina2=datum2.substring(0, 4);
+							int godina2B=Integer.parseInt(godina2);
+							if(godinaB<godina2B || mjesecB>12 || mjesecB<1 || danB>31 || danB<1) {
+								greska_12.setText("if poredjenja");
+								greska_12.setVisible(true);
+		    	    	        greska_12.setManaged(true);
+								return;
+							}
+							
+							
+							MySQL.deleteNarudzba(id);
+							narudzben.remove(n);
+							tableView4.getItems().remove(selected);
+							MySQL.insertNarudzba(n1);
+							prihvacene1.put(n1.getID(),n1);
+							System.out.println(n1);
+							
+							greska_12.setText("Uspjesno!");
+							
+				
+							
+							
+							
+							
+		    	        });
+	    	       
+	    	        odjava4.setOnAction(en->{
+		    			primaryStage.setScene(scene3);
+		    		});
+	    		});
+	    		
+	    		odobrene_narudzbe.setOnAction(ex123->{
+	    			TableView tabela1 = new TableView();
+
+	    	    	TableColumn<Map, String> column1 = new TableColumn<>("Datum narudzbe:");
+	    	        TableColumn<Map,String>  column2=new TableColumn<>("Datum isporuke:");
+	    	        TableColumn<Map,String> column3=new TableColumn<>("Vrijednost narudzbe:");
+	    	        
+	    	        column1.setCellValueFactory(new MapValueFactory<>("dat_narudzbe"));
+	    	        column2.setCellValueFactory(new MapValueFactory<>("dat_isporuke"));
+	    	        column3.setCellValueFactory(new MapValueFactory<>("vr_narudzbe"));
+	    	        
+	    	        column1.prefWidthProperty().bind(tabela1.widthProperty().multiply(0.3));
+	    	        column2.prefWidthProperty().bind(tabela1.widthProperty().multiply(0.3));
+	    	        column3.prefWidthProperty().bind(tabela1.widthProperty().multiply(0.4));
+	    	        
+	    	        column1.setResizable(false);
+	    	        column2.setResizable(false);
+	    	        column3.setResizable(false);
+	    	        
+	    	        tabela1.getColumns().add(column1);
+	    	        tabela1.getColumns().add(column2);
+	    	        tabela1.getColumns().add(column3);
+	    	        
+	    	        ScrollPane sp=new ScrollPane();
+	    			sp.setContent(tabela1);
+	    			sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+	    			sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+	    			
+	    			//TreeMap<Integer,Narudzba> odobrene=Trgovac.ucitajNarudzbeTrgovca(trgovacS);
+	    			
+	    			for(Narudzba n:prihvacene1.values()) {
+	    				Map<String,Object> map=new HashMap<>();
+	    				map.put("dat_narudzbe", n.getDatumNarudzbe());
+	    				map.put("dat_isporuke", n.getDatumIsporuke());
+	    				DecimalFormat df=new DecimalFormat("#.00");
+	    				map.put("vr_narudzbe", df.format(n.getVrijednostNarudzbe()));
+	    				map.put("id", n.getID());
+	    				tabela1.getItems().add(map);
+	    				
+	    			}
+	    
+	    			
+	    			
+	    			VBox buttons_t=new VBox(10);
+	    	        Button odjava_t=new Button("Nazad");
+	    	        Button prikaziDetalje_t=new Button("Detalji");
+	    	        
+	    	        VBox izbor_t=new VBox(10);
+	    	        VBox prikaziD_t=new VBox(10);
+	    	        prikaziD_t.setPadding(new Insets(5,10,0,20));
+	    	        prikaziD_t.setManaged(false);
+	    	        VBox ta2 = new VBox(tabela1);
+	    	        VBox.setMargin(ta2,new Insets(10,10,10,10));
+	    	        buttons_t.getChildren().addAll(odjava_t,prikaziDetalje_t);
+	    	        izbor_t.getChildren().addAll(ta2,buttons_t,prikaziD_t);
+	    	        izbor_t.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203), CornerRadii.EMPTY, Insets.EMPTY)));
+	    	        Scene scene_t=new Scene(izbor_t,550,550);
+	    	        primaryStage.setScene(scene_t);
+	    	        
+	    	        odjava_t.setOnAction(en->{
+		    			primaryStage.setScene(scene3);
+		    		});
+	    	        
+	    	        prikaziDetalje_t.setOnAction(ax->{
+	    	        	
+	 	    	        	TableView tabela1a=new TableView();
+	 		    			
+	 		    			TableColumn<Map, String> column1b = new TableColumn<>("Artikal:");
+	 		    	        TableColumn<Map,String>  column2b=new TableColumn<>("Kolicina:");
+	 		    	        TableColumn<Map,String> column3b=new TableColumn<>("Cijena po komadu:");
+	 		    	        
+	 		    	        
+	 		    	        column1b.setCellValueFactory(new MapValueFactory<>("artikal"));
+	 		    	        column2b.setCellValueFactory(new MapValueFactory<>("kolicina"));
+	 		    	        column3b.setCellValueFactory(new MapValueFactory<>("cijena"));
+	 		    	        
+	 		    	        
+	 		    	        column1b.prefWidthProperty().bind(tabela1a.widthProperty().multiply(0.333));
+	 		    	        column2b.prefWidthProperty().bind(tabela1a.widthProperty().multiply(0.333));
+	 		    	        column3b.prefWidthProperty().bind(tabela1a.widthProperty().multiply(0.333));
+	 		    	        
+	 		    	        
+	 		    	        column1b.setResizable(false);
+	 		    	        column2b.setResizable(false);
+	 		    	        column3b.setResizable(false);
+	 		    	        
+	 		    	        tabela1a.getColumns().add(column1b);
+	 		    	        tabela1a.getColumns().add(column2b);
+	 		    	        tabela1a.getColumns().add(column3b);
+	 		    	        
+	 		    	        Map<String,Object> selected=(HashMap<String,Object>)tabela1.getSelectionModel().getSelectedItem();
+	 						if(prikaziD_t.isManaged() && prikaziD_t.isVisible()) {
+	 							prikaziD_t.setManaged(false);
+	 							prikaziD_t.setVisible(false);
+	 							return;
+	 						}
+	 						
+	 						tabela1a.getItems().clear();
+	 						
+	 						
+	 		    	        int ID=(int)selected.get("id");
+	 						Narudzba narudzba=prihvacene1.get(ID);
+	 						
+	 						if(selected==null)
+	 							return;	
+	 						
+	 						TreeMap<Integer,ArtikalNarudzbe> artikliNarudzbe=ArtikalNarudzbe.getArtikliNarudzbe();
+	 		    	        
+	 		    	        for(ArtikalNarudzbe a:artikliNarudzbe.values()) {
+	 		    	        	if(!a.getNarudzba().equals(narudzba))
+	 								continue;
+	 							
+	 							Map<String,Object>ma1=new HashMap<>();
+	 							ma1.put("artikal", a.getProizvod().getNaziv());
+	 							ma1.put("kolicina", a.getKolicina());
+	 							DecimalFormat df = new DecimalFormat("#.00");
+	 							ma1.put("cijena", df.format(a.getCijenaKomada()));
+	 							//ma.put("prodajnomj",a.getNarudzba().getTrgovac().getProdajnoMjesto().getNaziv());
+	 							
+	 							tabela1a.getItems().add(ma1);
+	 		    	        }
+	 		    	        Label pm1=new Label();
+	 		    	        ProdajnoMjesto pm2=narudzba.getTrgovac().getProdajnoMjesto();
+	 		    	        //System.out.println(narudzba.getTrgovac().getProdajnoMjesto().getNaziv());
+	 		    	        //String naziv=pm1.getNaziv();
+	 						pm1.setText("Prodajno mjesto:"+pm2);
+	 		    	        
+	 		    	        pm1.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID,CornerRadii.EMPTY,BorderWidths.DEFAULT)));
+	 					    pm1.setBackground(new Background(new BackgroundFill(Color.AQUAMARINE,CornerRadii.EMPTY,Insets.EMPTY)));
+	 					    pm1.setMinWidth(400);
+	 					    pm1.setMinHeight(25);
+	 					    pm1.setAlignment(Pos.CENTER);
+	 					    Button zatvori1=new Button("Zatvori");
+	 						prikaziD_t.getChildren().addAll(tabela1a,pm1,zatvori1);
+	 						prikaziD_t.setVisible(true);
+	 						prikaziD_t.setManaged(true);
+	 						
+	 						zatvori1.setOnAction(ee->{
+	 							prikaziD_t.getChildren().clear();
+	 							prikaziD_t.setVisible(false);
+	 							prikaziD_t.setManaged(false);
+	 						});
+
+	    	        });
+	    		});
+	    		
+	    		novoprodajno.setOnAction(a2->{
+	    			
+	    			Label greska_n=new Label("");
+	    			Label grad_n=new Label("Grad:");
+	    			TextField grad_tf=new TextField();
+	    			grad_tf.setMinWidth(50);
+	    			VBox grad_vb=new VBox(10);
+	    			grad_vb.getChildren().addAll(grad_n,grad_tf);
+	    			Label drzava_n=new Label("Drzava:");
+	    			TextField drzava_tf=new TextField();
+	    			drzava_tf.setMinWidth(100);
+	    			VBox drzava_vb=new VBox(10);
+	    			drzava_vb.getChildren().addAll(drzava_n,drzava_tf);
+	    			Label adresa_n=new Label("Adresa:");
+	    			TextField adresa_tf=new TextField();
+	    			adresa_tf.setMinWidth(100);
+	    			VBox adresa_vb=new VBox(10);
+	    			adresa_vb.getChildren().addAll(adresa_n,adresa_tf);
+	    			Label telefon_n=new Label("Telefon");
+	    			TextField telefon_tf=new TextField();
+	    			telefon_tf.setMinWidth(10);
+	    			VBox telefon_vb=new VBox(10);
+	    			telefon_vb.getChildren().addAll(telefon_n,telefon_tf);
+	    			VBox unos_n=new VBox(10);
+	    			unos_n.getChildren().addAll(greska_n,grad_vb,drzava_vb,adresa_vb,telefon_vb);
+	    			//unos_n.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203), CornerRadii.EMPTY, Insets.EMPTY)));
+	    			VBox.setMargin(unos_n,new Insets(10,10,10,10));
+	    			
+	    			Button dodaj=new Button("Dodaj");
+	    			Button izadji=new Button("Izadji");
+	    			VBox dugmad_n=new VBox(10);
+	    			dugmad_n.setAlignment(Pos.CENTER);
+	    			dugmad_n.getChildren().addAll(dodaj,izadji);
+	    			
+	    			VBox novo_prodajno=new VBox(10);
+	    			novo_prodajno.getChildren().addAll(unos_n,dugmad_n);
+	    			novo_prodajno.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203), CornerRadii.EMPTY, Insets.EMPTY)));
+	    			Scene scene_n=new Scene(novo_prodajno,400,400);
+	    			primaryStage.setScene(scene_n);
+	    			
+	    			
+	    			dodaj.setOnAction(ax3->{
+	    				
+	    				if(grad_tf.getText().isEmpty() || drzava_tf.getText().isEmpty() ||
+	    						adresa_tf.getText().isEmpty() || telefon_tf.getText().isEmpty()) {
+	    					greska_n.setText("Niste unijeli neko polje.");
+	    					greska_n.setVisible(true);
+	    					greska_n.setManaged(true);
+	    				}
+	    				String grad_no=grad_tf.getText();
+	    				String drzava_no=drzava_tf.getText();
+	    				String adresa_no=adresa_tf.getText();
+	    				String telefon_no=telefon_tf.getText();
+		    			int id_no=trgovacS.getPosljednjiIDProdajno();
+		    			
+		    			ProdajnoMjesto prodajno_novo=new ProdajnoMjesto(id_no,
+		    					grad_no,drzava_no,adresa_no,telefon_no);
+		    			
+		    			MySQL.insertProdajnoMjesto(prodajno_novo);
+	    			
+		    			greska_n.setText("");
+		    			greska_n.setText("Uspjesno ste se registrovali.");
+		    			
+		    			grad_tf.setText("");
+		    			drzava_tf.setText("");
+		    			adresa_tf.setText("");
+		    			telefon_tf.setText("");
+		    			
+		    			});
+		    			
+		    			izadji.setOnAction(fjn->{
+		    				primaryStage.setScene(scene3);
+		    			});
+	    			
+	    			
+	    			
+	    			
+	    		});
+	    		
+	    		novitrgovac.setOnAction(hh->{
+	    			Label greska_nt=new Label("");
+	    			Label ime_nt=new Label("Ime:      ");
+	    			TextField ime_tf_t=new TextField();
+	    			HBox ime_vb_t=new HBox(10);
+	    			ime_vb_t.getChildren().addAll(ime_nt,ime_tf_t);
+	    			Label prezime_nt=new Label("Prezime:");
+	    			TextField prezime_tf_t=new TextField();
+	    			HBox prezime_vb_t=new HBox(10);
+	    			prezime_vb_t.getChildren().addAll(prezime_nt,prezime_tf_t);
+	    			Label telefon_nt=new Label("Telefon: ");
+	    			TextField telefon_tf_t=new TextField();
+	    			HBox telefon_vb_t=new HBox(10);
+	    			telefon_vb_t.getChildren().addAll(telefon_nt,telefon_tf_t);
+	    			Label email_nt=new Label("Email:    ");
+	    			TextField email_tf_t=new TextField();
+	    			HBox email_vb_t=new HBox(10);
+	    			email_vb_t.getChildren().addAll(email_nt,email_tf_t);
+	    			Label pol_nt=new Label("Pol:");
+	    			RadioButton zen_nt=new RadioButton("Zenski");
+	    			RadioButton mus_nt=new RadioButton("Muski");
+	    			HBox pol_vb_t=new HBox(10);
+	    			pol_vb_t.getChildren().addAll(pol_nt,zen_nt,mus_nt);
+	    			
+	    			TableView prodajno_tv=new TableView();
+	    			
+					TableColumn<Map,String> column16=new TableColumn("Mjesto:");
+	    	    	TableColumn<Map,String> column26=new TableColumn("Adresa:");
+	    	    	TableColumn<Map,String> column36=new TableColumn("Drzava:");
+	    	    	
+	    	    	column16.setCellValueFactory(new MapValueFactory<>("mjesto"));
+	    	        column26.setCellValueFactory(new MapValueFactory<>("adresa"));
+	    	        column36.setCellValueFactory(new MapValueFactory<>("drzava"));
+	    	       
+	    	        
+	    	        column16.prefWidthProperty().bind(prodajno_tv.widthProperty().multiply(0.3));
+	    	        column26.prefWidthProperty().bind(prodajno_tv.widthProperty().multiply(0.4));
+	    	        column36.prefWidthProperty().bind(prodajno_tv.widthProperty().multiply(0.3));
+	    	        
+	    	        
+	    	        column16.setResizable(false);
+	    	        column26.setResizable(false);
+	    	        column36.setResizable(false);
+	    	        
+	    	        prodajno_tv.getColumns().add(column16);
+	    	        prodajno_tv.getColumns().add(column26);
+	    	        prodajno_tv.getColumns().add(column36);
+	    	        
+	    	        prodajno_tv.setMinSize(200, 200);
+	    	        //prodajno_tv.setMaxHeight(100);
+	    	        
+	    	        ScrollPane sp=new ScrollPane();
+	    			sp.setContent(prodajno_tv);
+	    			sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+	    			sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+	    	        
+	    	        TreeMap<Integer,ProdajnoMjesto> pm=ProdajnoMjesto.getProdajnaMjesta();
+	    	        for(ProdajnoMjesto p:pm.values()) {
+	    	        	Map<String,Object>ma1=new HashMap<>();
+	    	        	ma1.put("mjesto", p.getGrad());
+						ma1.put("adresa", p.getAdresa());
+						ma1.put("drzava", p.getDrzava());
+						ma1.put("id",p.getID());
+						prodajno_tv.getItems().add(ma1);
+	    	        }
+	    	        
+	    	        prodajno_tv.setMaxHeight(100);
+	    			
+	    	        
+	    			
+	    			
+	    			
+	    			Label korisnicko_nt=new Label("Korisnicko ime:");
+	    			TextField korisnicko_tft=new TextField();
+	    			Label lozinka_nt=new Label("Lozinka:");
+	    			PasswordField lozinka_pt=new PasswordField();
+	    			HBox lozkor_nt=new HBox(10);
+	    			lozkor_nt.getChildren().addAll(korisnicko_nt,korisnicko_tft,lozinka_nt,lozinka_pt);
+	    			
+	    			Button dodaj=new Button("Dodaj");
+	    			Button nazad=new Button("Nazad");
+	    			VBox dugmad_nt=new VBox(10);
+	    			dugmad_nt.getChildren().addAll(dodaj,nazad);
+	    			VBox unos_nt=new VBox(10);
+	    			VBox.setMargin(unos_nt,new Insets(5,5,5,5));
+	    			unos_nt.getChildren().addAll(greska_nt,ime_vb_t,prezime_vb_t,telefon_vb_t,email_vb_t,pol_vb_t,lozkor_nt,dugmad_nt);
+	    			VBox sve_t=new VBox(10);
+	    			VBox provb=new VBox(prodajno_tv);
+	    			VBox.setMargin(provb,new Insets(5,5,5,5));
+	    			sve_t.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203), CornerRadii.EMPTY, Insets.EMPTY)));
+	    			sve_t.getChildren().addAll(provb,unos_nt);
+	    			
+	    			unos_nt.setMaxHeight(100);
+	    			Scene scenent=new Scene(sve_t,500,550);
+		    		
+	    			primaryStage.setScene(scenent);
+	    			
+	    			dodaj.setOnAction(ju->{
+	    				Map<String,Object> selected=(HashMap<String,Object>)prodajno_tv.getSelectionModel().getSelectedItem();
+	    	        	if(selected==null) {
+	    	        		greska_nt.setText("Niste oznacili prodajno mjesto.");
+	    					greska_nt.setVisible(true);
+	    					greska_nt.setManaged(true);
+	    	        	}
+	    	        	
+	    	        	int id=(int)selected.get("id");
+	    	        	ProdajnoMjesto pm11=pm.get(id);
+	    				if(ime_tf_t.getText().isEmpty() || prezime_tf_t.getText().isEmpty()||
+	    						(!zen_nt.isSelected() && !mus_nt.isSelected()) || telefon_tf_t.getText().isEmpty()
+	    						|| email_tf_t.getText().isEmpty() || korisnicko_tft.getText().isEmpty() || lozinka_pt.getText().isEmpty()) {
+	    					greska_nt.setText("Neko polje nije uneseno.");
+	    					greska_nt.setVisible(true);
+	    					greska_nt.setManaged(true);
+	    				}
+	    				
+	    				int id_tr=Trgovac.getPosljedniID()+1;
+	    				String ime_t=ime_tf_t.getText();
+	    				String prezime_t=prezime_tf_t.getText();
+	    				String korisnicko_t=korisnicko_tft.getText();
+	    				String lozinka_t=lozinka_pt.getText();
+	    				String pol_t=new String("");
+	    				if(zen_nt.isSelected())
+	    					pol_t="Z";
+	    				else if(mus_nt.isSelected())
+	    					pol_t="M";
+	    				String telefon_t=telefon_tf_t.getText();
+	    				String email_t=email_tf_t.getText();
+	    				int ID=trgovacS.getPosljedniID()+1;
+	    				int pmID_t=0;
+	    				
+	    				Trgovac novi_trg=new Trgovac(id_tr,korisnicko_t,ime_t,prezime_t,lozinka_t,pol_t,
+	    						telefon_t,email_t,id);
+	    				
+	    				MySQL.insertTrgovac(novi_trg);
+	    				greska_nt.setText("uspjesno!");
+	    			});
+	    			
+	    			nazad.setOnAction(ju1->{
+	    				primaryStage.setScene(scene3);
+	    			});
+	    		});
+	    		dodajPRO.setOnAction(ex -> {
+					Label greska_p1=new Label("");
+					Label nazivPRO=new Label("Naziv:");
+					TextField nazivPTF=new TextField();
+					nazivPTF.setMaxWidth(200);
+					Label opisPRO=new Label("Opis:");
+					TextField opisPTF=new TextField();
+					opisPTF.setMaxWidth(200);
+					Label cijenaPRO=new Label("Cijena:");
+					TextField cijenaPTF=new TextField();
+					cijenaPTF.setMaxWidth(200);
+					Label greskaPRO=new Label();
+					greskaPRO.setManaged(false);
+					greskaPRO.setVisible(false);
+					greskaPRO.setTextFill(Color.RED);
+					Button dodajPROB=new Button("Dodaj proizvod");
+					Button nazadPRO=new Button("Nazad");
+					HBox dugPRO=new HBox(20);
+					dugPRO.getChildren().addAll(dodajPROB,nazadPRO);
+					dugPRO.setAlignment(Pos.CENTER);
+					VBox proizvodVB=new VBox(10);
+					VBox.setMargin(proizvodVB,new Insets(7,7,7,7));
+					proizvodVB.getChildren().addAll(nazivPRO,nazivPTF,opisPRO,opisPTF,cijenaPRO,cijenaPTF,greskaPRO,dugPRO);
+					proizvodVB.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203), CornerRadii.EMPTY, Insets.EMPTY)));
+					proizvodVB.setPadding(new Insets(10,10,10,10));
+					
+					Scene scena5=new Scene(proizvodVB,300,300);
+					primaryStage.setScene(scena5);
+					
+					nazadPRO.setOnAction(exc -> {
+						greska_p1.setManaged(false);
+						primaryStage.setScene(scene3);
+					});
+					
+					dodajPROB.setOnAction(exc -> {
+						if(nazivPTF.getText().isEmpty() || 
+							cijenaPTF.getText().isEmpty()) {
+								greskaPRO.setVisible(true);
+								greskaPRO.setManaged(true);
+								greskaPRO.setText("Niste unijeli sve podatke!");
+								return;
+							}
+						double cijena=0;
+						try {
+							cijena=Double.parseDouble(cijenaPTF.getText());
+						}catch(Exception x) {
+							greskaPRO.setVisible(true);
+							greskaPRO.setManaged(true);
+							greskaPRO.setText("Nije validan unos cijene!");
+							return;
+						}
+						greskaPRO.setVisible(false);
+						greskaPRO.setManaged(false);
+						String naziv1=nazivPTF.getText();
+						String opis1="";
+						if(opisPTF.getText().isEmpty())
+							opis1=null;
+						else
+							opis1=opisPTF.getText();
+						int id_pp=Proizvod.getPosljednjiId()+1;
+						Proizvod p=new Proizvod(id_pp,naziv1,opis1,cijena);
+						MySQL.insertProizvod(p);
+						greska_p1.setText("Uspjesno dodavanje proizvoda!");
+						greska_p1.setManaged(true);
+						greska_p1.setVisible(true);
+						primaryStage.setScene(scene3);
+						
+					});
+				});
+	    		azurirajproizvod.setOnAction(alo->{
+	    			Label greska_p=new Label("");
+	    			TableView tv1=new TableView();
+					Label proizvodL=new Label("Izaberite proizvod:");
+					tv1.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+					TableColumn<Map,String> kolonaNaziv=new TableColumn<>("Naziv");
+					TableColumn<Map,String> kolonaOpis=new TableColumn<>("Opis");
+					TableColumn<Map,String> kolonaCijena=new TableColumn<>("Cijena");
+					kolonaNaziv.setCellValueFactory(new MapValueFactory<>("naziv"));
+					kolonaOpis.setCellValueFactory(new MapValueFactory<>("opis"));
+					kolonaCijena.setCellValueFactory(new MapValueFactory<>("cijena"));
+					tv1.getColumns().addAll(kolonaNaziv,kolonaOpis,kolonaCijena);
+					
+					tv1.setMaxSize(450, 300);
+					ScrollPane sp2=new ScrollPane();
+					sp2.setContent(tv1);
+					sp2.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+					sp2.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+				    
+				    TreeMap<Integer,Proizvod> proizvodi=Proizvod.getProizvodi();
+					for(Proizvod p: proizvodi.values()) {
+								
+						Map<String,Object>m1=new HashMap<>();
+						m1.put("naziv", p.getNaziv());
+						m1.put("opis", p.getOpis());
+						DecimalFormat df = new DecimalFormat("#.00");
+						m1.put("cijena", df.format(p.getCijena()));
+						m1.put("id", p.getID());
+						
+						tv1.getItems().add(m1);
+						}
+					VBox azurVB=new VBox();
+					azurVB.getChildren().addAll(proizvodL,tv1);
+					
+					Label aznazivPRO=new Label("Azuriraj naziv:");
+					TextField aznazivPTF=new TextField();
+					aznazivPTF.setMaxWidth(200);
+					Label azopisPRO=new Label("Azuriraj opis:");
+					TextField azopisPTF=new TextField();
+					azopisPTF.setMaxWidth(200);
+					Label azcijenaPRO=new Label("Azuriraj cijenu:");
+					TextField azcijenaPTF=new TextField();
+					azcijenaPTF.setMaxWidth(200);
+					Label greskaAZ=new Label();
+					greskaAZ.setTextFill(Color.RED);
+					greskaAZ.setManaged(false);
+					greskaAZ.setVisible(false);
+					
+					Button azurPROB=new Button("Azuriraj proizvod");
+					Button aznazad=new Button("Nazad");
+					HBox azPRO=new HBox(20);
+					azPRO.getChildren().addAll(azurPROB,aznazad);
+					VBox azuriranjeP=new VBox(10);
+					azuriranjeP.setAlignment(Pos.CENTER);
+					azuriranjeP.getChildren().addAll(azurVB,aznazivPRO,aznazivPTF,azopisPRO,azopisPTF,azcijenaPRO,azcijenaPTF,greskaAZ,azPRO);
+					azuriranjeP.setBackground(new Background(new BackgroundFill(Color.rgb(255, 192, 203), CornerRadii.EMPTY, Insets.EMPTY)));
+					azuriranjeP.setPadding(new Insets(10,10,10,10));
+					
+					Scene scena6=new Scene(azuriranjeP,500,600);
+					primaryStage.setScene(scena6);
+					
+					aznazad.setOnAction(exc -> {
+						greska_p.setManaged(false);
+						primaryStage.setScene(scene3);
+					});
+					azurPROB.setOnAction(exc -> {
+						Map<String,Object> selected=(HashMap<String,Object>)tv1.getSelectionModel().getSelectedItem();
+						if(selected==null) {
+							greskaAZ.setManaged(true);
+							greskaAZ.setVisible(true);
+							greskaAZ.setText("Niste oznacili proizvod!");
+							return;
+						}
+						if(aznazivPTF.getText().isEmpty() && azopisPTF.getText().isEmpty()
+							&& azcijenaPTF.getText().isEmpty()) {
+							greskaAZ.setManaged(true);
+							greskaAZ.setVisible(true);
+							greskaAZ.setText("Niste nista unijeli!");
+							return;
+						}
+						greskaAZ.setManaged(false);
+						greskaAZ.setVisible(false);
+						
+						int prodID=(int)selected.get("id");
+						Proizvod p=proizvodi.get(prodID);
+						String naziv1="";
+						String opis1="";
+						double cijena1=0;
+						
+						if(!aznazivPTF.getText().isEmpty()) {
+							naziv1=aznazivPTF.getText();
+							MySQL.updateProizvod(p, naziv1, "naziv");
+						}
+						if(!azopisPTF.getText().isEmpty()) {
+							opis1=azopisPTF.getText();
+							MySQL.updateProizvod(p, opis1, "opis");
+						}
+						if(!azcijenaPTF.getText().isEmpty()) {
+							try {
+							cijena1=Double.parseDouble(azcijenaPTF.getText());
+							}catch(Exception x) {
+								greskaAZ.setManaged(true);
+								greskaAZ.setVisible(true);
+								greskaAZ.setText("Cijena nije validna!");
+								return;
+							}
+							MySQL.updateProizvod(p, cijena1, "cijena");
+						}
+						primaryStage.setScene(scene3);
+						greska_p.setText("Uspjesno azuriranje proizvoda!");
+						greska_p.setManaged(true);
+						greska_p.setVisible(true);
+						//if(!service.isRunning())
+							//service.start();
+					});
+	    		});
+	    		
+	    		izbortr2.setOnAction(exx->{
+	    			tfKorisnickoIme.setText("");
+					lozinka.setText("");
+					k.setSelected(false);
+					t.setSelected(false);
+					primaryStage.setScene(scene);
+	    		});
+	    		
+	    		
+	    	}
+	    });
+	    reg.setOnAction(e->{
+			primaryStage.setScene(scener);
+			
+			registruj.setOnAction(e1->{
+				
+				if(tfime.getText().isEmpty() || tfprezime.getText().isEmpty() || tfdrzava.getText().isEmpty()
+						|| tfgrad.getText().isEmpty() || tfpobr.getText().isEmpty() ||
+						tfemail.getText().isEmpty() || (!zen.isSelected() && !mus.isSelected())
+						|| tfkorime.getText().isEmpty() || plozinka.getText().isEmpty()) {
+					greskica.setText("Neko polje nije popunjeno.");
+					greskica.setVisible(true);
+					greskica.setManaged(true);
+					return;
+				}
+				
+				TreeMap<Integer,Kupac> kupci_reg=Kupac.getKupci();
+				for(Kupac k1:kupci_reg.values()) {
+					if(k1.getKorisnickoIme().equals(tfkorime.getText())) {
+						greskica.setText("Korisnik sa unesenim korisnickim imenom vec postoji.");
+						greskica.setVisible(true);
+						greskica.setManaged(true);
+						return;
+					}
+				}
+				for(Kupac k1:kupci_reg.values()) {
+					if(k1.getEmail().equals(tfemail.getText())) {
+						greskica.setText("Korisnik sa unesenim email-om vec postoji.");
+						greskica.setVisible(true);
+						greskica.setManaged(true);
+						return;
+					}
+				}
+				
+				if(greskica.isManaged()) {
+					greskica.setText("");
+					greskica.setManaged(false);
+					greskica.setVisible(false);
+				}
+				
+				
+				String pol_reg="";
+				if(zen.isSelected())
+					pol_reg="Z";
+				else if(mus.isSelected())
+					pol_reg="M";
+				
+				String adresa_reg="";
+				if(tfadresa.getText().isEmpty())
+					adresa_reg="null";
+				else
+					adresa_reg=tfadresa.getText();
+				
+				String telefon_reg="";
+				if(tftelefon.getText().isEmpty())
+					telefon_reg="null";
+				else
+					telefon_reg=tftelefon.getText();
+				
+				int id_novog=kupci_reg.get(kupci_reg.lastKey()).getID()+1;
+				String korisnicko_reg=tfkorime.getText();
+				String ime_reg=tfime.getText();
+				String prezime_reg=tfprezime.getText();
+				String lozinka_reg=plozinka.getText();
+				String grad_reg=tfgrad.getText();
+				String drzava_reg=tfdrzava.getText();
+				String pobr_reg=tfpobr.getText();
+				String email_reg=tfemail.getText();
+				
+				Kupac kupac_novi=new Kupac(id_novog,korisnicko_reg,ime_reg,prezime_reg,
+						lozinka_reg,telefon_reg,adresa_reg,grad_reg,drzava_reg,
+						pobr_reg,pol_reg,email_reg);
+				
+				MySQL.insertKupac(kupac_novi);
+				
+				greskica.setText(" ");
+				
+				tfKorisnickoIme.clear();
+				lozinka.clear();
+				k.setSelected(false);
+				t.setSelected(false);
+				primaryStage.setScene(scene);
+				greska1.setText("Uspjesna registracija");
+				
+				tfime.setText("");
+				tfprezime.setText("");
+				tfdrzava.setText("");
+				tfgrad.setText("");
+				tfadresa.setText("");
+				tfpobr.setText("");
+				tftelefon.setText("");
+				tfemail.setText("");
+				zen.setSelected(false);
+				mus.setSelected(false);
+				tfkorime.setText("");
+				plozinka.setText("");
+				
+				
+				
+				
+			});
+			
+			nazadreg.setOnAction(aaa->{
+				primaryStage.setScene(scene);
+			});
+		});
+	    
+	    
+	    
+	    
+	    
+	}
+	class ProcessService extends Service<Void>{
+
+		@Override
+		protected Task<Void> createTask() {
+			return new Task<Void>() {
+
+				@Override
+				protected Void call() throws Exception {
+					Thread.sleep(2000);
+					return null;
+				}
+				
+			};
+		}
+		
+	}
+	
+	
+	
+	
+
+}

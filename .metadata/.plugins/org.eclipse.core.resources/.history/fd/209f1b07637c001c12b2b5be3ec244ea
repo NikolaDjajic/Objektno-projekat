@@ -1,0 +1,73 @@
+package application;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+public class Predmet {
+	
+	private String sifra,naziv,imeProf,prezimeProf;
+	private int ects;
+	private static Map<String,Predmet> sviPredmeti= new TreeMap<String,Predmet>(); 
+	
+	private Predmet(String sifra,String naziv,String imeProf,String prezimeProf,int ects) {
+		this.sifra=sifra;
+		this.naziv=naziv;
+		this.imeProf=imeProf;
+		this.prezimeProf=prezimeProf;
+		this.ects=ects;
+		
+		sviPredmeti.put(sifra, this);
+	}
+	
+	public static void ucitajPredmete() {
+		Path put=Paths.get("Predmet.txt");
+		try {
+			Predmet novi;
+			List<String>linije=Files.readAllLines(put);
+			for(int i=0;i<linije.size();i++) {
+				String st=linije.get(i);
+				String niz[]=st.split(":");
+				String sifra=niz[0];
+				niz=niz[1].split(",");
+				String naziv=niz[0].substring(2);
+				int ects=Integer.parseInt(niz[2].substring(1,2));
+				niz=niz[1].substring(1).split(" ");
+				String ime=niz[0];
+				String prezime=niz[1];
+			
+				novi=new Predmet(sifra,naziv,ime,prezime,ects);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public String getSifra() {
+		return sifra;
+	}
+
+	public String getNaziv() {
+		return naziv;
+	}
+
+	public String getImeProf() {
+		return imeProf;
+	}
+
+	public String getPrezimeProf() {
+		return prezimeProf;
+	}
+
+	public int getEcts() {
+		return ects;
+	}
+
+	public static Map<String, Predmet> getSviPredmeti() {
+		return sviPredmeti;
+	}
+}

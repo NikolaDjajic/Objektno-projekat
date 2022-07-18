@@ -1,0 +1,147 @@
+package aplikacija;
+
+
+import java.util.ArrayList;
+import java.util.TreeMap;
+
+public class Narudzba {
+
+	private Kupac kupac;
+	private Trgovac trgovac;
+	private String datumNarudzbe;
+	private String datumIsporuke;
+	private double vrijednostNarudzbe;
+	private String napomena;
+	
+	private int ID;
+	
+	private static TreeMap<Integer,Narudzba> narudzbe=new TreeMap<>();
+	private static TreeMap<Integer,Narudzba> neprihvacene=new TreeMap<>();
+	
+	public Narudzba(int ID,int kupacID,int trgovacID, String datumNarudzbe,String datumIsporuke,String napomena) {
+		
+		this.ID=ID;
+		this.datumNarudzbe=datumNarudzbe;
+		this.datumIsporuke=datumIsporuke;
+		this.napomena=napomena;
+		
+		TreeMap<Integer,Kupac>kupci=Kupac.getKupci();
+		this.kupac=kupci.get(kupacID);
+		TreeMap<Integer,Trgovac>trgovci=Trgovac.getTrgovci();
+		
+		
+		if(trgovacID == -1) {
+			this.trgovac=null;
+			neprihvacene.put(ID,this);
+			}
+		else
+			this.trgovac=trgovci.get(trgovacID);
+		
+		
+		
+		narudzbe.put(ID, this);
+		
+		
+	}
+	
+	public Narudzba(int ID,double vrijednostNarudzbe,String datumNarudzbe,String datumIsporuke,String napomena ) {
+		this.ID=ID;
+		this.vrijednostNarudzbe=vrijednostNarudzbe;
+		this.datumNarudzbe=datumNarudzbe;
+		this.datumIsporuke=datumIsporuke;
+		this.napomena=napomena;
+		izracunajVrijednost();
+	}
+	
+	public Narudzba(int id) {
+		this.ID=id;
+	}
+	
+	public Narudzba() {}
+	public void izracunajVrijednost() {
+		
+		TreeMap<Integer,ArtikalNarudzbe> artikli=ArtikalNarudzbe.getArtikliNarudzbe();
+		double vrijednost=0;
+		
+		for(ArtikalNarudzbe an: artikli.values())
+			if(this.ID == an.getNarudzba().ID)
+				vrijednost+=an.getKolicina()*an.getCijenaKomada();
+		
+		
+	}
+	public double getVrijednostNarudzbe() {
+		
+		TreeMap<Integer,ArtikalNarudzbe> artikli=ArtikalNarudzbe.getArtikliNarudzbe();
+		double vrijednost=0;
+		
+		for(ArtikalNarudzbe an: artikli.values())
+			if(this.ID == an.getNarudzba().ID)
+				vrijednost+=an.getKolicina()*an.getCijenaKomada();
+		
+		return vrijednost;
+	}
+
+	public Trgovac getTrgovac() {
+		return trgovac;
+	}
+	
+	public Kupac getKupac() {
+		return kupac;
+	}
+	
+	public static TreeMap<Integer,Narudzba> getNarudzbe(){
+		return narudzbe;
+	}
+	
+	public static TreeMap<Integer,Narudzba> getNeprihvaceneNarudzbe(){
+		TreeMap<Integer,Narudzba> narudzbe=Narudzba.getNarudzbe();
+		TreeMap<Integer,Narudzba> nepr=Narudzba.neprihvacene;
+		for(Narudzba n:narudzbe.values())
+			if(n.getDatumIsporuke()==null)
+				nepr.put(n.getID(),n);
+		
+		return nepr;
+		
+	}
+	
+	public String getDatumNarudzbe() {
+		return datumNarudzbe;
+	}
+	
+	public String getDatumIsporuke() {
+		return datumIsporuke;
+	}
+	
+	public int getID() {
+		return ID;
+	}
+	
+	public String getNapomena() {
+		return napomena;
+	}
+	
+	public void setDatumIsporuke(String datumIsporuke) {
+		this.datumIsporuke=datumIsporuke;
+	}
+	
+	public void setTrgovac(Trgovac t) {
+		this.trgovac=t;
+	}
+	
+	public String toString() {
+		return ID+" "+"kupac:"+kupac;
+	}
+	
+	//jos spojiti gui u mejnu
+	
+	public static void main(String[]args) {
+		//MySQL.ucitavanjeGUI();
+		//System.out.println(Narudzba.narudzbe.keySet());
+		//Narudzba n=new Narudzba(10138,187,1,"2005-10-20",null,null);
+		//System.out.println(n.getVrijednostNarudzbe());
+		//MySQL.insertNarudzba(n);
+	}
+	
+	
+}
+

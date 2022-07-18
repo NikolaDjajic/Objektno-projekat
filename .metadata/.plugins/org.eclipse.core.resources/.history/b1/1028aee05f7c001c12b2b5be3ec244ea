@@ -1,0 +1,93 @@
+package application;
+
+import java.util.Map;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class GUI extends Application {
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+	
+		VBox root= new VBox(25);
+		root.setPadding(new Insets(0,0,0,20));
+		
+		Label prikaz=new Label("Prikaz:");
+		HBox prvi=new HBox(30);
+		
+		RadioButton studenti=new RadioButton("Studenti");
+		RadioButton predmeti=new RadioButton("Predmeti");
+		RadioButton ispiti=new RadioButton("Ispiti");
+		Button potvrdi=new Button("Potvrdi");
+		ToggleGroup tb1=new ToggleGroup();
+		studenti.setSelected(true);
+		studenti.setToggleGroup(tb1);
+		predmeti.setToggleGroup(tb1);
+		ispiti.setToggleGroup(tb1);
+		
+		prvi.getChildren().addAll(studenti,predmeti,ispiti,potvrdi);
+		
+		HBox drugi=new HBox(30);
+		RadioButton brojIndeksa=new RadioButton("Broju indeksa");
+		RadioButton prOcjena=new RadioButton("Prosjecnoj ocjeni");
+		drugi.getChildren().addAll(brojIndeksa,prOcjena);
+		ToggleGroup tb2=new ToggleGroup();
+		brojIndeksa.setToggleGroup(tb2);
+		prOcjena.setToggleGroup(tb2);
+		
+		Label poredajPo=new Label("Poredaj po:");
+		
+		TableView tabela=new TableView();
+	
+		TableColumn<Student, String> column1 = new TableColumn<>("Broj indeksa");
+		column1.setCellValueFactory(new PropertyValueFactory<>("index"));
+
+		TableColumn<Student, String> column2 = new TableColumn<>("Ime");
+		column2.setCellValueFactory(new PropertyValueFactory<>("ime"));
+		
+		TableColumn<Student, String> column3 = new TableColumn<>("Prezime");
+		column3.setCellValueFactory(new PropertyValueFactory<>("prezime"));
+		
+		/*TableColumn<Student, String> column2 = new TableColumn<>("Last Name");
+		column2.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+		
+		TableColumn<Student, String> column2 = new TableColumn<>("Last Name");
+		column2.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+		
+		TableColumn<Student, String> column2 = new TableColumn<>("Last Name");
+		column2.setCellValueFactory(new PropertyValueFactory<>("lastName"));*/
+		
+		tabela.getColumns().addAll(column1,column2,column3);
+
+		Map <String,Student> sviStudenti=Student.getSviStudenti();
+		
+		for(Map.Entry<String,Student> it:sviStudenti.entrySet()) {
+			System.out.println(it.getValue().getIndex()+" "+it.getValue().getIme());
+			tabela.getItems().add(it.getValue());
+		}
+		root.getChildren().addAll(prikaz,prvi,poredajPo,drugi,tabela);
+		Scene scena= new Scene (root,700,400);
+		primaryStage.setScene(scena);
+		primaryStage.setTitle("ORS1 / OOP drugi kolokvium");
+		primaryStage.show();
+	}
+	
+	public static void main(String[] args) {
+		Predmet.ucitajPredmete();
+		Student.ucitajStudente();
+		launch(args);
+	}
+
+}

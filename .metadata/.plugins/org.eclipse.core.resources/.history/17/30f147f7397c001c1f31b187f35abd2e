@@ -1,0 +1,18 @@
+package application;
+
+public class Predmet {
+	
+	private String sifra,naziv,imeProf,prezimeProf;
+	private int ects;
+	
+	private Predmet(String sifra,String naziv,String imeProf,String prezimeProf,int ects) {
+		this.sifra=sifra;
+		this.naziv=naziv;
+		this.imeProf=imeProf;
+		this.prezimeProf=prezimeProf;
+		this.ects=ects;
+		
+		
+	}
+
+}

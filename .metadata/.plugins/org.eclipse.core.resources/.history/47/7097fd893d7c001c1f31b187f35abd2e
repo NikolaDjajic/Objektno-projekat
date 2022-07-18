@@ -1,0 +1,11 @@
+package application;
+
+public class Ispit {
+
+	private Predmet predmet;
+	private Student student;
+	private String datum;
+	private int ocjena;
+	
+	private Ispit()
+}

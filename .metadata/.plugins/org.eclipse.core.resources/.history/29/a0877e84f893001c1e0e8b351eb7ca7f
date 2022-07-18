@@ -1,0 +1,239 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.mysql.cj.x.protobuf.MysqlxNotice.SessionVariableChangedOrBuilder;
+
+import application.Selo;
+import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.MapValueFactory;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+
+public class GUI extends Application {
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+
+		VBox vboxLogin = new VBox(15);
+		vboxLogin.setPadding(new Insets(50, 50, 20, 50));
+		vboxLogin.setAlignment(Pos.BASELINE_CENTER);
+
+		Label naslov = new Label("Elektronski dnevnik");
+		naslov.setTextFill(Color.BLUE);
+		naslov.setFont(Font.font("Helvetica", FontWeight.BOLD, 35));
+
+		Label ime = new Label("Unesite korisnicko ime ili email:");
+		TextField tfime = new TextField();
+		tfime.setMinWidth(250);
+		tfime.setMaxWidth(250);
+		VBox vbime = new VBox(10);
+		vbime.setAlignment(Pos.BASELINE_CENTER);
+		vbime.getChildren().addAll(ime, tfime);
+
+		Label lblozinka = new Label("Unesite lozinku:");
+		TextField tflozinka = new TextField();
+		tflozinka.setMinWidth(250);
+		tflozinka.setMaxWidth(250);
+		VBox vblozinka = new VBox(10);
+		vblozinka.setAlignment(Pos.BASELINE_CENTER);
+		vblozinka.getChildren().addAll(lblozinka, tflozinka);
+
+		Button prijava = new Button("Prijava");
+		Label obavjestenje = new Label("");
+
+		obavjestenje.setTextFill(Color.RED);
+
+		VBox vbprijava = new VBox(30);
+		vbprijava.setAlignment(Pos.BASELINE_CENTER);
+		vbprijava.setPadding(new Insets(20, 0, 0, 0));
+		vbprijava.getChildren().addAll(obavjestenje, prijava);
+
+		vboxLogin.getChildren().addAll(naslov, vbime, vblozinka, vbprijava);
+
+		Scene scenaLogin = new Scene(vboxLogin, 500, 500);
+		primaryStage.setScene(scenaLogin);
+		primaryStage.setResizable(false);
+		primaryStage.show();
+
+		// DUGME
+
+		prijava.setOnAction(e -> {
+
+			/*
+			 * if(tfime.getText().isEmpty() ) {
+			 * obavjestenje.setText("Korisnicko ime ili email nije uneseno!"); return; }
+			 * if(tflozinka.getText().isEmpty() ) {
+			 * obavjestenje.setText("Sifra nije unesena!"); return; }
+			 * obavjestenje.setText("");
+			 */
+
+			// String korisnickoIme=tfime.getText();
+			// String lozinka=tflozinka.getText();
+
+			String korisnickoIme = "vukasin.markovic";
+			String lozinka = "vukasin.markovic123";
+			int pristupni = PristupniPodaci.prijava(korisnickoIme, lozinka);
+			/*
+			 * if(pristupni==-1) { obavjestenje.setText("Pogresno uneseni podaci!"); return;
+			 * }
+			 * 
+			 */
+			// boolean ucen=Ucenik.postojiUcenik(pristupni);
+
+			// UCENIK
+			boolean ucen = true;
+
+			if (ucen) {
+
+				HBox root = new HBox(20);
+				Ucenik ucenik = Ucenik.getUcenikByPP(pristupni);
+				ucenik.setSkola();
+				root.getChildren().clear();
+
+				VBox vbLijevi = new VBox();
+				Button bOcjene = new Button("Ocjene");
+				Button bIzostanci = new Button("Izostanci");
+				Button bPocetna = new Button("Pocetna");
+
+				bOcjene.setMaxSize(120, 60);
+				bIzostanci.setMaxSize(120, 60);
+				bPocetna.setMaxSize(120, 60);
+
+				bOcjene.setMinSize(120, 60);
+				bIzostanci.setMinSize(120, 60);
+				bPocetna.setMinSize(120, 60);
+
+				vbLijevi.getChildren().addAll(bPocetna, bOcjene, bIzostanci);
+
+				VBox desniPoc = new VBox(10);
+				Label dd = new Label("Dobro dosli u E-dnevnik " + ucenik.getPristupniPodaci().getKorisnickoIme());
+				Label podaci = new Label();
+
+				String s = "";
+				s += "Ime: " + ucenik.getIme();
+				s += "\n\nPrezime: " + ucenik.getPrezime();
+				s += "\n\nPol: " + ucenik.getPol();
+				s += "\n\nSkola koju ucenik pohadja: " + ucenik.getSkola().getNaziv();
+				s += "\n\nMjesto: " + ucenik.getSkola().getMjesto();
+				s += "\n\nGrad: " + ucenik.getSkola().getGrad();
+				s += "\n\nDrzava: " + ucenik.getSkola().getDrzava();
+				s += "\n\nPredmeti koje pohadja: " + ucenik.ispisiPredmete();
+
+				podaci.setText(s);
+				desniPoc.getChildren().addAll(dd, podaci);
+
+				HBox hPocetni = new HBox(20);
+				hPocetni.getChildren().addAll(vbLijevi, desniPoc);
+				root.getChildren().setAll(hPocetni);
+
+				Scene scena = new Scene(root, 500, 500);
+				primaryStage.setScene(scena);
+				primaryStage.show();
+
+				bPocetna.setOnAction(e1 -> {
+
+					root.getChildren().clear();
+					root.getChildren().addAll(vbLijevi, desniPoc);
+
+					primaryStage.setScene(scena);
+					primaryStage.show();
+
+				});
+
+				bOcjene.setOnAction(e1 -> {
+					VBox desni1 = new VBox(20);
+					root.getChildren().clear();
+					root.getChildren().addAll(vbLijevi, desni1);
+
+					ArrayList<Ocjena> ocjene = ucenik.getOcjene();
+					if (!ocjene.isEmpty()) {
+						TableView t = new TableView();
+
+						TableColumn<Map, String> tc1 = new TableColumn("Naziv predmeta");
+						tc1.setCellValueFactory(new MapValueFactory<>("nazivpr"));
+
+						TableColumn<Map, String> tc2 = new TableColumn("Predmetni profesor");
+						tc2.setCellValueFactory(new MapValueFactory<>("prpf"));
+
+						TableColumn<Map, String> tc3 = new TableColumn("Datum");
+						tc3.setCellValueFactory(new MapValueFactory<>("datum"));
+
+						TableColumn<Map, Integer> tc4 = new TableColumn("Ocjena");
+						tc4.setCellValueFactory(new MapValueFactory<>("ocjena"));
+
+						t.getColumns().addAll(tc1, tc2, tc3, tc4);
+
+						ObservableList<Map<String, Object>> items = FXCollections
+								.<Map<String, Object>>observableArrayList();
+
+						for (Ocjena o : ocjene) {
+							Map<String, Object> nm = new HashMap<>();
+							nm.put("nazivpr", o.getPredmetUSkoli().getPredmet().getNaziv());
+							nm.put("prpf", o.getPredmetUSkoli().getProfesor() + " "+ o.getPredmetUSkoli().getProfesor().getPrezime());
+							nm.put("datum", o.getDatum());
+							nm.put("ocjena", o.getOcjena());
+							items.add(nm);
+						}
+						t.getItems().addAll(items);
+					}
+
+					primaryStage.setScene(scena);
+					primaryStage.show();
+
+				});
+
+				bIzostanci.setOnAction(e1 -> {
+
+					VBox desni2 = new VBox(20);
+					root.getChildren().clear();
+					root.getChildren().addAll(vbLijevi, desni2);
+
+					primaryStage.setScene(scena);
+					primaryStage.show();
+
+				});
+
+				// PROFESOR
+
+			} else if (!ucen) {
+				System.out.println("Profesor!");
+
+			}
+
+		});
+
+	}
+
+	public static void main(String[] args) {
+		Konekcija konekcija = new Konekcija();
+		konekcija.ucitajPodatke();
+
+		System.out.println(PristupniPodaci.getPristupniPodaciByID(2).getKorisnickoIme() + " "
+				+ PristupniPodaci.getPristupniPodaciByID(2).getSifra());
+
+		// konekcija.novaLozinka(PristupniPodaci.getPristupniPodaciByID(2), "caos");
+		launch(args);
+
+	}
+}

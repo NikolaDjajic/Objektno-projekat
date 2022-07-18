@@ -1,0 +1,26 @@
+import java.util.ArrayList;
+
+public class Hrana {
+	private String naziv;
+	private Restoran restoran;
+	private double cijena;
+	private static ArrayList<Hrana> lista_Hrane = new ArrayList<Hrana>();
+
+	public Hrana(String naziv, String ime_Restorana, double cijena) {
+		this.naziv=naziv;
+		this.restoran=Restoran.get_RestoranNaziv(ime_Restorana);
+		this.cijena=cijena;
+		
+		boolean uslov = true;
+		for (Hrana h : lista_Hrane) {
+			if (h.naziv.equals(this.naziv) && (h.cijena == (this.cijena))
+					&& (h.restoran.equals(Restoran.get_RestoranNaziv(ime_Restorana))))
+				uslov = false;
+			break;
+		}
+		if (uslov == true)
+			lista_Hrane.add(this);
+		else
+			System.err.println("Vec postoji unos!");
+	}
+}

@@ -1,0 +1,26 @@
+package application;
+
+import java.util.function.Function;
+
+public class cs {
+
+	public int nesto(int p) {
+		int c=4;
+		
+		return (c!=p)?
+				5;
+				3
+	}
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		
+		int i=2;
+		Function<Integer, Integer> fun=(x)->x+3;
+		
+		System.out.println(fun.apply(i));
+		
+	}
+
+}

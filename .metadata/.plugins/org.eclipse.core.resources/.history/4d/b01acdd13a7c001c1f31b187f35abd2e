@@ -1,0 +1,48 @@
+package application;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
+public class Predmet {
+	
+	private String sifra,naziv,imeProf,prezimeProf;
+	private int ects;
+	
+	private Predmet(String sifra,String naziv,String imeProf,String prezimeProf,int ects) {
+		this.sifra=sifra;
+		this.naziv=naziv;
+		this.imeProf=imeProf;
+		this.prezimeProf=prezimeProf;
+		this.ects=ects;
+		
+	}
+	
+	public static void ucitajPredmete() {
+		Path put=Paths.get("Predmet.txt");
+		try {
+			Student novi;
+			List<String>linije=Files.readAllLines(put);
+			for(int i=0;i<linije.size();i++) {
+				String st=linije.get(i);
+				String niz[]=st.split(":");
+				String sifra=niz[0];
+				niz=niz[1].split(",");
+				String naziv=niz[0].substring(2);
+				int ects=Integer.parseInt(niz[2]);
+				String pol=niz[2];
+				System.out.println(sifra+" "+naziv+" "+ects);
+			
+				//novi=new Predmet(sifra,naziv,);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	
+
+}

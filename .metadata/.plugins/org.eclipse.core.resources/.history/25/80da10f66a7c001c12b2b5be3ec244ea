@@ -1,0 +1,82 @@
+package application;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+public class Ispit {
+
+	private Predmet predmet;
+	private Student student;
+	private String datum;
+	private int ocjena;
+	private static Set<Ispit> sviIspiti =new TreeSet<Ispit>();
+	
+	
+	public Ispit(String st,String pr,String datum,int ocjena) {
+		this.student=Student.getStudentByIndex(st);
+		this.predmet=Predmet.getPredmetBySifra(pr);
+		this.datum=datum;
+		this.ocjena=ocjena;
+		
+		sviIspiti.add(this);
+	}
+
+/*	@Override
+	public int compareTo(Ispit i) {
+		String niz[]=this.datum.split("-");
+		String prvis=niz[2]+""+niz[1]+""+niz[0];
+		niz=i.getDatum().split("-");
+		String drugis=niz[2]+""+niz[1]+""+niz[0];
+		int prvi=Integer.parseInt(prvis);
+		int drugi=Integer.parseInt(drugis);
+		System.out.println(prvi+" "+ drugi);
+		return prvi-drugi;
+	}*/
+	
+	
+
+	public static void ucitajIspite() {
+		Path put=Paths.get("Ispit.txt");
+		try {
+			Ispit novi;
+			List<String>linije=Files.readAllLines(put);
+			for(int i=0;i<linije.size();i++) {
+				String st=linije.get(i);
+				String niz[]=st.split(",");
+				String index=niz[0];
+				String sifra=niz[1].substring(1);
+				String datum=niz[2].substring(1);
+				String ocjenas=niz[3].substring(1);
+				int ocjena=Integer.parseInt(ocjenas);
+				novi=new Ispit(index,sifra,datum,ocjena);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Predmet getPredmet() {
+		return predmet;
+	}
+
+	public Student getStudent() {
+		return student;
+	}
+
+	public String getDatum() {
+		return datum;
+	}
+
+	public int getOcjena() {
+		return ocjena;
+	}
+
+	public static Set<Ispit> getSviIspiti() {
+		return sviIspiti;
+	}
+}

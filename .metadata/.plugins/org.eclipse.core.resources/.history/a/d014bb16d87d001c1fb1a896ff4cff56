@@ -1,0 +1,18 @@
+import java.util.ArrayList;
+
+public class Obrok {
+	private Gost gost;
+	private Hrana hrana;
+	private String datum;
+	private Restoran restoran;
+	private static ArrayList<Obrok> lista_Obroka = new ArrayList<Obrok>();
+	
+	public Obrok(String ime, String prezime, String naziv_hrane, String naziv_restorana, String datum) {
+		this.gost=Gost.get_GostIme(ime, prezime);
+		this.hrana=Hrana.getHranaPoImenu(naziv_hrane);
+		this.restoran=Restoran.get_RestoranNaziv(naziv_restorana);
+		this.datum=datum;
+		
+		lista_Obroka.add(this);
+	}
+}
